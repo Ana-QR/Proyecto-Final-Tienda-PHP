@@ -6,27 +6,15 @@
 
     // Cabecera de la pagina
     require_once __DIR__ . '/views/layout/header.php';
-    
-    
 ?>
 
-
-
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Proyecto Tienda</title>
-</head>
+<html lang="es">
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.4.1/dist/tailwind.min.css" rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'">
 
 <body>
-    <!-- Cabecera en layout/header.php-->
-
-    <!-- Contenido -->
+<main>
     <div id="central">
-        <div class="productos" width=100px>
+        <div class="productos">
             <img src="assets/img/lanaDelRey.jpg" alt="Vinilo Lana del Rey" width="100px">
             <h4>Lana del Rey</h4>
             <p>50€</p>
@@ -46,10 +34,10 @@
             <p>25€</p>
             <a href="carrito">Comprar</a>
         </div>
-
     </div>
+</main>
 </body>
-
-<!-- Pie de página en layout/footer.php-->
-
 </html>
+
+<?php 
+require_once __DIR__ . '/views/layout/footer.php'; 
