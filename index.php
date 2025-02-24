@@ -1,5 +1,6 @@
 <?php
     require_once 'config/param.php';
+    require_once 'autoload.php';
 
     use Controllers\ErrorController;
 
