@@ -17,8 +17,8 @@ namespace Models;
         private $db;
     
         public function __construct() {
-            $this->db = new Conexion();
-        }    
+            $this->db = (new Conexion())->getPdo(); // Asegurar que db es un objeto PDO
+        }   
         
 
         // Getters y Setters
@@ -59,7 +59,7 @@ namespace Models;
         }
 
         public function setPassword($password){
-            $this->password = $password;
+            $this->password = password_hash($password, PASSWORD_BCRYPT, ['cost' => 10]);
         }
 
         public function getRol(){
@@ -74,14 +74,11 @@ namespace Models;
         // Método para registrar un usuario
         public function registrarUsuario(){
             try {
-                // Hashear la contraseña antes de insertarla en la base de datos
-                $hashedPassword = password_hash($this->password, PASSWORD_BCRYPT, ['cost' => 10]);
-
-                $stmt = $this->db->getPdo()->prepare("INSERT INTO usuarios (nombre, apellidos, email, password, rol) VALUES (:nombre, :apellidos, :email, :password, :rol)");
+                $stmt = $this->db->prepare("INSERT INTO usuarios (nombre, apellidos, email, password, rol) VALUES (:nombre, :apellidos, :email, :password, :rol)");
                 $stmt->bindValue(':nombre', $this->nombre);
                 $stmt->bindValue(':apellidos', $this->apellidos);
                 $stmt->bindValue(':email', $this->email);
-                $stmt->bindValue(':password', $this->password = $hashedPassword);
+                $stmt->bindValue(':password', $this->password);
                 $stmt->bindValue(':rol', $this->rol);
                 return $stmt->execute();
             } catch (PDOException $e) {
@@ -94,27 +91,22 @@ namespace Models;
 
         // Método para iniciar sesión
         public function login(){
-            $email = $this->email;
-            $password = $this->password;
-
             try {
-                $stmt = $this->db->getPdo()->prepare("SELECT * FROM usuarios WHERE email = :email");
-                $stmt->bindValue(':email', $email);
+                $stmt = $this->db->prepare("SELECT * FROM usuarios WHERE email = :email");
+                $stmt->bindValue(':email', $this->email);
                 $stmt->execute();
                 $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
-
-                if ($usuario && password_verify($password, $usuario['password'])) {
-                    $usuarioLoggeado = new Usuario();
-                    $usuarioLoggeado->setId($usuario['id']);
-                    $usuarioLoggeado->setNombre($usuario['nombre']);
-                    $usuarioLoggeado->setApellidos($usuario['apellidos']);
-                    $usuarioLoggeado->setEmail($usuario['email']);
-                    $usuarioLoggeado->setPassword($usuario['password']);
-                    $usuarioLoggeado->setRol($usuario['rol']);
-                    return $usuarioLoggeado; // Devuelve el usuario 
-                } else {
-                    return false;
+    
+                if ($usuario && password_verify($this->password, $usuario['password'])) {
+                    return [
+                        'id' => $usuario['id'],
+                        'nombre' => $usuario['nombre'],
+                        'apellidos' => $usuario['apellidos'],
+                        'email' => $usuario['email'],
+                        'rol' => $usuario['rol']
+                    ];
                 }
+                return false;
             } catch (PDOException $e) {
                 error_log("Error al iniciar sesión: " . $e->getMessage());
                 return false;
