@@ -100,7 +100,7 @@ class UsuarioController
         } else {
             // Contraseña incorrecta o usuario no encontrado
             $_SESSION['error_login'] = 'Inicio de sesión incorrecto';
-            header('Location: ' . URL_BASE . 'usuario/mostrarFormularioLogin');
+            header('Location: ' . URL_BASE . 'views/usuario/login.php');
         }
     }
 }

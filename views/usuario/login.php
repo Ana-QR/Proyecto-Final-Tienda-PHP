@@ -27,7 +27,7 @@ session_start();
         <?php endif; ?>
 
         <!-- Formulario de inicio de sesión -->
-        <form method="POST" action="/controllers/UsuarioController.php">
+        <form action="<?= URL_BASE ?>usuario/inicioUsuario" method="POST">
             <!-- Campos del formulario -->
             <!--Campo de solicitud de correo electrónico-->
             <div class="mb-5">
