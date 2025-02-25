@@ -95,12 +95,8 @@ class UsuarioController
                 }
             }
 
-            header('Location: ' . URL_BASE);
+            header('Location: ' . URL_BASE. 'usuario/mostarFormularioLogin');
             exit();
-        } else {
-            // Contraseña incorrecta o usuario no encontrado
-            $_SESSION['error_login'] = 'Inicio de sesión incorrecto';
-            header('Location: ' . URL_BASE . 'usuario/mostarFormularioLogin');
         }
     }
 }

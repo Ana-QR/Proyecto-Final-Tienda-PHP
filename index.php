@@ -6,9 +6,6 @@ require_once __DIR__ . '/config/param.php';
 require_once __DIR__ . '/autoload.php';
 require_once __DIR__ . '/controllers/UsuarioController.php';
 
-define('ACTION_DEFAULT', 'index'); // Define la acción predeterminada
-define('CONTROLLER_DEFAULT', 'HomeController'); // Define el controlador predeterminado
-
 use Controllers\ErrorController;
 use Controllers\UsuarioController;
 
@@ -16,15 +13,6 @@ $usuario = new UsuarioController();
 
 // Cabecera de la pagina
 require_once __DIR__ . '/views/layout/header.php';
-
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['action'])) {
-    if ($_GET['action'] === 'registrar') {
-        $usuario->registrarUsuario();
-    } elseif ($_GET['action'] === 'login') {
-        $usuario->inicioUsuario();
-    }
-}
 
 /**
  * Function to display the error page.
@@ -36,35 +24,51 @@ function show_error()
     $error->index();
 }
 
-if (isset($_GET['controller'])) {
-    $nombre_controlador = 'controllers\\' . filter_var($_GET['controller'], FILTER_SANITIZE_SPECIAL_CHARS) . 'Controller';
-} elseif (!isset($_GET['controller']) && !isset($_GET['action'])) {
-    $nombre_controlador = 'controllers\\' . CONTROLLER_DEFAULT . 'Controller';
-} else {
+
+if(isset($_GET['controller'])){
+
+    $nombre_controlador = 'controllers\\' . $_GET['controller'] . 'Controller';
+
+}elseif(!isset($_GET['controller']) && !isset($_GET['action'])){
+    
+    $nombre_controlador = 'controllers\\' . controlador_base . 'Controller';
+    
+}else{
+
     echo "Controlador no encontrado";
     show_error();
     exit();
+
 }
 
 
 // Compruebo si existe la clase
-if (class_exists($nombre_controlador)) {
+if(class_exists($nombre_controlador)){
+
     $controlador = new $nombre_controlador();
 
-    if (isset($_GET['action']) && method_exists($controlador, $_GET['action'])) {
+    if(isset($_GET['action']) && method_exists($controlador, $_GET['action'])){
+
         $action = $_GET['action'];
         $controlador->$action();
-    } elseif (!isset($_GET['controller']) && !isset($_GET['action'])) {
-        $action_default = ACTION_DEFAULT;
+
+    }elseif(!isset($_GET['controller']) && !isset($_GET['action'])){
+    
+        $action_default = accion_por_defecto;
         $controlador->$action_default();
-    } else {
+        
+    }else{
+
         echo "Acción por defecto no encontrada";
         show_error();
+
     }
 
-} else {
+}else{
+
     echo "Controlador no encontrado";
     show_error();
+
 }
 
 require_once __DIR__ . '/views/layout/footer.php';
