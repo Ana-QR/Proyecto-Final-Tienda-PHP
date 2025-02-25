@@ -1,50 +1,64 @@
 <?php
 
-    ob_start();
-    session_start();
-    require_once __DIR__ . '/config/param.php';
-    require_once __DIR__ . '/autoload.php';
+ob_start();
+session_start();
+require_once __DIR__ . '/config/param.php';
+require_once __DIR__ . '/autoload.php';
+require_once __DIR__ . '/controllers/UsuarioController.php';
 
-    define('ACTION_DEFAULT', 'index'); // Define la acción predeterminada
-    define('CONTROLLER_DEFAULT', 'HomeController'); // Define el controlador predeterminado
+define('ACTION_DEFAULT', 'index'); // Define la acción predeterminada
+define('CONTROLLER_DEFAULT', 'HomeController'); // Define el controlador predeterminado
 
-    use Controllers\ErrorController;
+use Controllers\ErrorController;
+use Controllers\UsuarioController;
 
-    // Cabecera de la pagina
-    require_once __DIR__ . '/views/layout/header.php';
+$usuario = new UsuarioController();
 
-    function show_error(){
-        $error = new ErrorController();
-        $error->index();
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['action'])) {
+    if ($_GET['action'] === 'registrar') {
+        $usuario->registrarUsuario();
+    } elseif ($_GET['action'] === 'login') {
+        $usuario->inicioUsuario();
     }
+}
 
-    if(isset($_GET['controller'])){
-        $nombre_controlador = $_GET['controller'] . 'Controller';
+// Cabecera de la pagina
+require_once __DIR__ . '/views/layout/header.php';
 
-    }elseif(!isset($_GET['controller']) && !isset($_GET['action'])){
-        $nombre_controlador = CONTROLLER_DEFAULT;
-    }else{
-        show_error();
-        exit();
-    }
+/**
+ * Function to display the error page.
+ * This function creates an instance of the ErrorController and calls its index method.
+ */
+function show_error()
+{
+    $error = new ErrorController();
+    $error->index();
+}
 
-    if(class_exists($nombre_controlador)){
-        $controlador = new $nombre_controlador();
+if (isset($_GET['controller'])) {
+    $nombre_controlador = filter_var($_GET['controller'], FILTER_SANITIZE_SPECIAL_CHARS). 'Controller';
+} else {
+    $nombre_controlador = CONTROLLER_DEFAULT;
+    exit();
+}
 
-        if(isset($_GET['action']) && method_exists($controlador, $_GET['action'])){
-            $action = $_GET['action'];
-            $controlador->$action();
-        }elseif(!isset($_GET['controller']) && !isset($_GET['action'])){
-            $action_default = ACTION_DEFAULT;
-            $controlador->$action_default();
-        }else{
-            show_error();
-        }
-    }else{
-        show_error();
-    }
 
-require_once __DIR__ . '/views/layout/footer.php'; 
+if (class_exists($nombre_controlador)) {
+    $controlador = new $nombre_controlador();
+
+    $action = filter_var($_GET['action'], FILTER_SANITIZE_SPECIAL_CHARS);
+        $action = $_GET['action'];
+        $controlador->$action();
+    } elseif (!isset($_GET['controller']) && !isset($_GET['action'])) {
+        $action_default = ACTION_DEFAULT;
+        $controlador->$action_default();
+} else {
+    show_error();
+}
+
+
+require_once __DIR__ . '/views/layout/footer.php';
 
 ob_end_flush();
 ?>

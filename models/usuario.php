@@ -2,6 +2,7 @@
 namespace Models;
 
     use Lib\Conexion;
+    
     use PDO;
     use PDOException;
 
@@ -75,13 +76,13 @@ namespace Models;
             try {
                 // Hashear la contraseña antes de insertarla en la base de datos
                 $hashedPassword = password_hash($this->password, PASSWORD_BCRYPT, ['cost' => 10]);
-    
+
                 $stmt = $this->db->getPdo()->prepare("INSERT INTO usuarios (nombre, apellidos, email, password, rol) VALUES (:nombre, :apellidos, :email, :password, :rol)");
-                $stmt->bindParam(':nombre', $this->nombre);
-                $stmt->bindParam(':apellidos', $this->apellidos);
-                $stmt->bindParam(':email', $this->email);
-                $stmt->bindParam(':password', $hashedPassword);
-                $stmt->bindParam(':rol', $this->rol);
+                $stmt->bindValue(':nombre', $this->nombre);
+                $stmt->bindValue(':apellidos', $this->apellidos);
+                $stmt->bindValue(':email', $this->email);
+                $stmt->bindValue(':password', $this->password = $hashedPassword);
+                $stmt->bindValue(':rol', $this->rol);
                 return $stmt->execute();
             } catch (PDOException $e) {
                 // Registrar el mensaje de error para propósitos de depuración
@@ -98,7 +99,7 @@ namespace Models;
 
             try {
                 $stmt = $this->db->getPdo()->prepare("SELECT * FROM usuarios WHERE email = :email");
-                $stmt->bindParam(':email', $email);
+                $stmt->bindValue(':email', $email);
                 $stmt->execute();
                 $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 

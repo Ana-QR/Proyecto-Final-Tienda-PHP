@@ -15,21 +15,23 @@ class UsuarioController{
     }
 
     public function mostrarFormularioRegistro(){
-        require_once __DIR__ . 'views/usuario/registro.php';
+        require_once __DIR__ . '/views/usuario/registro.php';
     }
     
     public function mostrarFormularioLogin(){
-        require_once __DIR__ . 'views/usuario/login.php';
+        require_once __DIR__ . '/views/usuario/login.php';
     }
 
     public function registrarUsuario(){
-        session_start();
-
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            $nombre = trim($_POST['nombre']);
-            $email = trim($_POST['email']);
-            $password = trim($_POST['password']);
+        if(session_status() == PHP_SESSION_NONE){
+            session_start();
         }
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $nombre = isset($_POST['nombre']) ? trim($_POST['nombre']) : null;
+            $email = isset($_POST['email']) ? trim($_POST['email']) : null;
+            $password = isset($_POST['password']) ? trim($_POST['password']) : null;
+        }        
 
         // Validar datos
         if (empty($nombre) || empty($email) || empty($password)) {
@@ -44,11 +46,14 @@ class UsuarioController{
             exit;
         }
 
+        // Hashear la contraseña antes de guardarla
+        $password_hashed = password_hash($password, PASSWORD_BCRYPT);
+
         try {
             $usuario = new Usuario();
-            if ($usuario->registrarUsuario($nombre, $email, $password)) {
+            if ($usuario->registrarUsuario($nombre, $email, $password_hashed)) {
                 $_SESSION['success'] = "Usuario registrado correctamente.";
-                header('Location: views/layout/header.php');
+                header('Location: ' . URL_BASE . 'usuario/mostrarFormularioLogin');
                 exit;
             } else {
                 $_SESSION['error'] = "Error al registrar el usuario.";
@@ -57,7 +62,7 @@ class UsuarioController{
             }
         } catch (PDOException $e) {
             $_SESSION['error'] = "Error: " . $e->getMessage();
-        }
+        }    
 
         header('Location: /error.php');
         exit;
@@ -65,15 +70,21 @@ class UsuarioController{
 
     
     public function inicioUsuario(){
-        if(isset($_POST)){
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $email = isset($_POST['email']) ? trim($_POST['email']) : null;
+            $password = isset($_POST['password']) ? trim($_POST['password']) : null;
+    
             $usuario = new Usuario();
-            $usuario->setEmail($_POST['email']);
-            $usuario->setPassword($_POST['password']);
-
+            $usuario->setEmail($email);
+    
             $inicio = $usuario->login();
-
-            if($inicio){
-                echo 'Inicio de sesión correcto';
+    
+            if ($inicio && password_verify($password, $inicio->getPassword())) {
+                // Contraseña correcta
                 $_SESSION['inicio'] = [
                     'id' => $inicio->getId(),
                     'nombre' => $inicio->getNombre(),
@@ -81,17 +92,17 @@ class UsuarioController{
                     'email' => $inicio->getEmail(),
                     'rol' => $inicio->getRol()
                 ];
-
-                if($inicio->getRol() == 'admin'){
+    
+                if ($inicio->getRol() == 'admin') {
                     $_SESSION['admin'] = true;
                 }
-
-                header('Location: '. URL_BASE);
+    
+                header('Location: ' . URL_BASE);
                 exit();
-            }else{
-                echo 'Inicio de sesión incorrecto';
+            } else {
+                // Contraseña incorrecta o usuario no encontrado
                 $_SESSION['error'] = 'Inicio de sesión incorrecto';
-                header('Location: '. URL_BASE . 'usuario/mostrarFormularioLogin');
+                header('Location: ' . URL_BASE . 'usuario/mostrarFormularioLogin');
                 exit();
             }
         }
