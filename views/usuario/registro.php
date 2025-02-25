@@ -17,11 +17,11 @@ session_start();
         <h1 class="text-2xl font-semibold text-center mb-5">Formulario de Registro</h1>
 
         <!-- Mostrar mensajes de sesion -->
-        <?php if ((isset($_SESSION['registro'])) && $_SESSION['registro'] == "bien"): ?>
+        <?php if ((isset($_SESSION['registro'])) && $_SESSION['registro'] == "correcto"): ?>
             <div class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-100" role="alert">
                 <span class="font-medium">¡Registro completado con éxito!</span>
             </div>
-        <?php elseif ((isset($_SESSION['registro'])) && $_SESSION['registro'] == "mal"): ?>
+        <?php elseif ((isset($_SESSION['registro'])) && $_SESSION['registro'] == "incorrecto"): ?>
             <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-100" role="alert">
                 <span class="font-medium">El registro no se ha podido completar</span>
             </div>

@@ -64,7 +64,7 @@ class UsuarioController
         } else {
             $_SESSION['registro'] = 'incorrecto';
         }
-        header('Location: ' . URL_BASE);
+        header('Location: ' . URL_BASE . 'usuario/mostrarFormularioRegistro');
         exit();
     }
 
