@@ -14,6 +14,9 @@ use Controllers\UsuarioController;
 
 $usuario = new UsuarioController();
 
+// Cabecera de la pagina
+require_once __DIR__ . '/views/layout/header.php';
+
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['action'])) {
     if ($_GET['action'] === 'registrar') {
@@ -22,9 +25,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_GET['action'])) {
         $usuario->inicioUsuario();
     }
 }
-
-// Cabecera de la pagina
-require_once __DIR__ . '/views/layout/header.php';
 
 /**
  * Function to display the error page.
@@ -37,26 +37,35 @@ function show_error()
 }
 
 if (isset($_GET['controller'])) {
-    $nombre_controlador = filter_var($_GET['controller'], FILTER_SANITIZE_SPECIAL_CHARS). 'Controller';
+    $nombre_controlador = 'controllers\\' . filter_var($_GET['controller'], FILTER_SANITIZE_SPECIAL_CHARS) . 'Controller';
+} elseif (!isset($_GET['controller']) && !isset($_GET['action'])) {
+    $nombre_controlador = 'controllers\\' . CONTROLLER_DEFAULT . 'Controller';
 } else {
-    $nombre_controlador = CONTROLLER_DEFAULT;
+    echo "Controlador no encontrado";
+    show_error();
     exit();
 }
 
 
+// Compruebo si existe la clase
 if (class_exists($nombre_controlador)) {
     $controlador = new $nombre_controlador();
 
-    $action = filter_var($_GET['action'], FILTER_SANITIZE_SPECIAL_CHARS);
+    if (isset($_GET['action']) && method_exists($controlador, $_GET['action'])) {
         $action = $_GET['action'];
         $controlador->$action();
     } elseif (!isset($_GET['controller']) && !isset($_GET['action'])) {
         $action_default = ACTION_DEFAULT;
         $controlador->$action_default();
+    } else {
+        echo "Acción por defecto no encontrada";
+        show_error();
+    }
+
 } else {
+    echo "Controlador no encontrado";
     show_error();
 }
-
 
 require_once __DIR__ . '/views/layout/footer.php';
 

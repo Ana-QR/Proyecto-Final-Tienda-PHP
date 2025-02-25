@@ -72,7 +72,7 @@ namespace Models;
 
         // Métodos
         // Método para registrar un usuario
-        public function registrarUsuario(){
+        public function guardarUsuario(){
             try {
                 $stmt = $this->db->prepare("INSERT INTO usuarios (nombre, apellidos, email, password, rol) VALUES (:nombre, :apellidos, :email, :password, :rol)");
                 $stmt->bindValue(':nombre', $this->nombre);
