@@ -19,12 +19,12 @@ class UsuarioController
      */
     public function mostrarFormularioRegistro()
     {
-        require_once __DIR__ . '/views/usuario/registro.php';
+        require_once __DIR__ . 'views/usuario/registro.php';
     }
 
     public function mostrarFormularioLogin()
     {
-        require_once __DIR__ . '/views/usuario/login.php';
+        require_once __DIR__ . 'views/usuario/login.php';
     }
 
     /**
@@ -100,7 +100,7 @@ class UsuarioController
         } else {
             // Contraseña incorrecta o usuario no encontrado
             $_SESSION['error_login'] = 'Inicio de sesión incorrecto';
-            header('Location: ' . URL_BASE . 'views/usuario/login.php');
+            header('Location: ' . URL_BASE . 'usuario/mostarFormularioLogin');
         }
     }
 }
