@@ -6,14 +6,15 @@ session_start();
 <html lang="en">
 
 <head>
+    <link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro</title>
 </head>
 
-<body class="bg-gray-100 flex justify-center items-center h-screen dark:bg-gray-900">
+<body class="bg-gray-100 flex justify-center items-center h-screen dark:bg-gray-500">
     <div class="w-full max-w-md bg-white p-6 rounded-lg shadow-md">
-    <h1 class="text-2xl font-semibold text-center mb-5">Formulario de registro</h1>
+    <h1 class="text-2xl font-semibold text-center mb-5">Formulario de egistro</h1>
 
     <!-- Mostrar mensajes de sesion -->
     <?php if (isset($_SESSION['success'])) : ?>
@@ -53,13 +54,14 @@ session_start();
             </div>
 
             <!--Etiqueta de recordar contraseña-->
-            <label for="remember" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Recuérdame</label>
+            <label for="remember" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-500">Recuérdame</label>
         </div>
 
         <!--Botón de envío de formulario-->
         <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Enviar</button>
     </form>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js" defer></script>
 </body>
 
 </html>
