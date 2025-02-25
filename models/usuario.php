@@ -91,22 +91,27 @@ namespace Models;
 
         // Método para iniciar sesión
         public function login(){
+            $email = $this->email;
+            $password = $this->password;
+
             try {
                 $stmt = $this->db->prepare("SELECT * FROM usuarios WHERE email = :email");
-                $stmt->bindValue(':email', $this->email);
+                $stmt->bindValue(':email', $email);
                 $stmt->execute();
                 $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
     
-                if ($usuario && password_verify($this->password, $usuario['password'])) {
-                    return [
-                        'id' => $usuario['id'],
-                        'nombre' => $usuario['nombre'],
-                        'apellidos' => $usuario['apellidos'],
-                        'email' => $usuario['email'],
-                        'rol' => $usuario['rol']
-                    ];
+                if ($usuario && password_verify($password, $usuario['password'])) {
+                    $usuarioLoggeado = new Usuario();
+                    $usuarioLoggeado->setId($usuario['id']);
+                    $usuarioLoggeado->setNombre($usuario['nombre']);
+                    $usuarioLoggeado->setApellidos($usuario['apellidos']);
+                    $usuarioLoggeado->setEmail($usuario['email']);
+                    $usuarioLoggeado->setPassword($usuario['password']);
+                    $usuarioLoggeado->setRol($usuario['rol']);
+                    return $usuarioLoggeado; // Devuelve el usuario 
+                }else{
+                    return false;
                 }
-                return false;
             } catch (PDOException $e) {
                 error_log("Error al iniciar sesión: " . $e->getMessage());
                 return false;
