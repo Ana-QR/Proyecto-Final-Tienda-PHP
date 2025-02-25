@@ -18,7 +18,20 @@
                 </a>
 
                 <div class="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
-                    <a href="http://localhost/dashboard/ProyectoFinal/views/usuario/registro.php" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                    <div class="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
+                        <?php if (isset($_SESSION['usuario'])): ?>
+                            <span class="text-gray-900 dark:text-white"><?php echo $_SESSION['usuario']['nombre']; ?> <?php echo $_SESSION['usuario']['apellido']; ?></span>
+                            <a href="http://localhost/dashboard/ProyectoFinal/views/usuario/logout.php" class="text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2 text-center ml-2">
+                                Cerrar sesión
+                            </a>
+                        <?php else: ?>
+                            <a href="http://localhost/dashboard/ProyectoFinal/views/usuario/login.php" class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center ml-2">
+                                Iniciar sesión
+                            </a>
+                        <?php endif; ?>
+                    </div>
+
+                    <a href="http://localhost/dashboard/ProyectoFinal/views/usuario/registro.php" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 ml-2">
                         Registrarse
                     </a>
                     <button data-collapse-toggle="navbar-cta" type="button"
@@ -33,7 +46,6 @@
                 </div>
             </div>
 
-            
 
             <div class="items-center justify-center hidden w-full md:flex md:w-auto md:order-1" id="navbar-cta">
                 <ul class="flex flex-col items-center font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-100 

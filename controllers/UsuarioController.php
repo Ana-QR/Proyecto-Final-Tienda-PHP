@@ -3,11 +3,23 @@
 namespace Controllers;
 
 use Models\Usuario;
-use Exception;
+use Lib\Conexion;
+use PDO;
+use PDOException;
 
 class UsuarioController{
+    private $pdo;
+
+    public function __construct(){
+        $this->pdo = new Conexion();
+    }
+
     public function mostrarFormularioRegistro(){
         require_once __DIR__ . 'views/usuario/registro.php';
+    }
+    
+    public function mostrarFormularioLogin(){
+        require_once __DIR__ . 'views/usuario/login.php';
     }
 
     public function registrarUsuario(){
@@ -43,11 +55,46 @@ class UsuarioController{
                 header('Location: /error.php');
                 exit;
             }
-        } catch (Exception $e) {
+        } catch (PDOException $e) {
             $_SESSION['error'] = "Error: " . $e->getMessage();
         }
 
         header('Location: /error.php');
         exit;
     }
+
+    
+    public function inicioUsuario(){
+        if(isset($_POST)){
+            $usuario = new Usuario();
+            $usuario->setEmail($_POST['email']);
+            $usuario->setPassword($_POST['password']);
+
+            $inicio = $usuario->login();
+
+            if($inicio){
+                echo 'Inicio de sesión correcto';
+                $_SESSION['inicio'] = [
+                    'id' => $inicio->getId(),
+                    'nombre' => $inicio->getNombre(),
+                    'apellidos' => $inicio->getApellidos(),
+                    'email' => $inicio->getEmail(),
+                    'rol' => $inicio->getRol()
+                ];
+
+                if($inicio->getRol() == 'admin'){
+                    $_SESSION['admin'] = true;
+                }
+
+                header('Location: '. URL_BASE);
+                exit();
+            }else{
+                echo 'Inicio de sesión incorrecto';
+                $_SESSION['error'] = 'Inicio de sesión incorrecto';
+                header('Location: '. URL_BASE . 'usuario/mostrarFormularioLogin');
+                exit();
+            }
+        }
+    }
+        
 }
