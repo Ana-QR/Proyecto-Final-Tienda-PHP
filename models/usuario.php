@@ -1,121 +1,160 @@
 <?php
+
 namespace Models;
 
-    use Lib\Conexion;
-    
-    use PDO;
-    use PDOException;
+use Lib\Conexion;
+use PDO;
+use PDOException;
 
-    class Usuario{
-        private $id;
-        private $nombre;
-        private $apellidos;
-        private $email;
-        private $password;
-        private $rol;
-    
-        private $db;
-    
-        public function __construct() {
-            $this->db = (new Conexion())->getPdo(); // Asegurar que db es un objeto PDO
-        }   
-        
+class Usuario
+{
+    private $id;
+    private $nombre;
+    private $apellidos;
+    private $email;
+    private $password;
+    private $rol;
 
-        // Getters y Setters
-        public function getId(){
-            return $this->id;
-        }
+    private $db;
 
-        public function setId($id){
-            $this->id = $id;
-        }
+    private $imagen;
 
-        public function getNombre(){
-            return $this->nombre;
-        }
+    public function __construct()
+    {
+        $this->db = new Conexion();
+    }
 
-        public function setNombre($nombre){
-            $this->nombre = $nombre;
-        }
+    // Getters y Setters
+    public function getId()
+    {
+        return $this->id;
+    }
 
-        public function getApellidos(){
-            return $this->apellidos;
-        }
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
 
-        public function setApellidos($apellidos){
-            $this->apellidos = $apellidos;
-        }
+    public function getNombre()
+    {
+        return $this->nombre;
+    }
 
-        public function getEmail(){
-            return $this->email;
-        }
+    public function setNombre($nombre)
+    {
+        $this->nombre = $nombre;
+    }
 
-        public function setEmail($email){
-            $this->email = $email;
-        }
+    public function getApellidos()
+    {
+        return $this->apellidos;
+    }
 
-        public function getPassword(){
-            return $this->password;
-        }
+    public function setApellidos($apellidos)
+    {
+        $this->apellidos = $apellidos;
+    }
 
-        public function setPassword($password){
-            $this->password = password_hash($password, PASSWORD_BCRYPT, ['cost' => 10]);
-        }
+    public function getEmail()
+    {
+        return $this->email;
+    }
 
-        public function getRol(){
-            return $this->rol;
-        }
+    public function setEmail($email)
+    {
+        $this->email = $email;
+    }
 
-        public function setRol($rol){
-            $this->rol = $rol;
-        }
+    public function getPassword()
+    {
+        return $this->password;
+    }
 
-        // Métodos
-        // Método para registrar un usuario
-        public function guardarUsuario(){
-            try {
-                $stmt = $this->db->prepare("INSERT INTO usuarios (nombre, apellidos, email, password, rol) VALUES (:nombre, :apellidos, :email, :password, :rol)");
-                $stmt->bindValue(':nombre', $this->nombre);
-                $stmt->bindValue(':apellidos', $this->apellidos);
-                $stmt->bindValue(':email', $this->email);
-                $stmt->bindValue(':password', $this->password);
-                $stmt->bindValue(':rol', $this->rol);
-                return $stmt->execute();
-            } catch (PDOException $e) {
-                // Registrar el mensaje de error para propósitos de depuración
-                error_log("Error al guardar el usuario: " . $e->getMessage());
-                // Puedes agregar manejo de errores adicional aquí, como notificar al usuario o reintentar la operación
-                return false;
-            }
-        }
+    public function setPassword($password)
+    {
+        $this->password = $password;
+    }
 
-        // Método para iniciar sesión
-        public function login(){
-            $email = $this->email;
-            $password = $this->password;
+    public function getRol()
+    {
+        return $this->rol;
+    }
 
-            try {
-                $stmt = $this->db->prepare("SELECT * FROM usuarios WHERE email = :email");
-                $stmt->bindValue(':email', $email);
-                $stmt->execute();
-                $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
-    
-                if ($usuario && password_verify($password, $usuario['password'])) {
-                    $usuarioLoggeado = new Usuario();
-                    $usuarioLoggeado->setId($usuario['id']);
-                    $usuarioLoggeado->setNombre($usuario['nombre']);
-                    $usuarioLoggeado->setApellidos($usuario['apellidos']);
-                    $usuarioLoggeado->setEmail($usuario['email']);
-                    $usuarioLoggeado->setPassword($usuario['password']);
-                    $usuarioLoggeado->setRol($usuario['rol']);
-                    return $usuarioLoggeado; // Devuelve el usuario 
-                }else{
-                    return false;
-                }
-            } catch (PDOException $e) {
-                error_log("Error al iniciar sesión: " . $e->getMessage());
-                return false;
-            }
+    public function setRol($rol)
+    {
+        $this->rol = $rol;
+    }
+
+    public function getImagen()
+    {
+        return $this->imagen;
+    }
+
+    // Métodos
+    // Método para registrar un usuario
+    public function guardarUsuario()
+    {
+        try {
+            $hashedPassword = password_hash($this->password, PASSWORD_BCRYPT, ['cost' => 4]);
+
+            $rol = $this->rol ? $this->rol : 'user'; //crear usuarios que sean admin
+
+            $stmt = $this->db->getPdo()->prepare("INSERT INTO usuarios (nombre, apellidos, email, password, rol) VALUES (:nombre, :apellidos, :email, :password, :rol)");
+            $stmt->bindValue(':nombre', $this->nombre);
+            $stmt->bindValue(':apellidos', $this->apellidos);
+            $stmt->bindValue(':email', $this->email);
+            $stmt->bindValue(':password', $this->password);
+            $stmt->bindValue(':rol', $this->rol);
+            return $stmt->execute();
+        } catch (PDOException $e) {
+            // Registrar el mensaje de error para propósitos de depuración
+            error_log("Error al guardar el usuario: " . $e->getMessage());
+            // Puedes agregar manejo de errores adicional aquí, como notificar al usuario o reintentar la operación
+            return false;
         }
     }
-?>
+
+    // Metodo para obtener todos los usuarios cuando eres admin
+    public function getAll()
+    {
+        $sql = "SELECT * FROM usuarios";
+        $usuarios = $this->db->getPdo()->query($sql);
+        return $usuarios;
+    }
+
+    public function getUsuarioPorId($id)
+    {
+        $sql = "SELECT * FROM usuarios WHERE id = $id";
+        $usuario = $this->db->getPdo()->query($sql);
+        return $usuario->fetch(PDO::FETCH_OBJ);
+    }
+
+    // Método para login de usuarios
+    public function login()
+    {
+        $result = false;
+        $email = $this->email;
+        $password = $this->password;
+
+        try {
+            // Miramos si el usuario existe en la BBDD
+            $stmt = $this->db->getPdo()->prepare("SELECT * FROM usuarios WHERE email = :email");
+            $stmt->bindValue(':email', $email);
+            $stmt->execute();
+            $usuario = $stmt->fetch(PDO::FETCH_OBJ);
+
+            if ($usuario) {
+                // Verificar si la contraseña es correcta
+                $verify = password_verify($password, $usuario->password);
+
+                if ($verify) {
+                    $result = $usuario;
+                }
+            }
+        } catch (PDOException $e) {
+            error_log("Error al iniciar sesión: " . $e->getMessage());
+        }
+
+        return $result;
+    }
+}

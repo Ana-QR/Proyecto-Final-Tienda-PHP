@@ -2,12 +2,22 @@
 
 namespace Controllers;
 
+require_once 'models/Usuario.php';
+require_once 'helpers/Utils.php';
+
 use Models\Usuario;
 use PDOException;
+use Utils;
 
-class UsuarioController
-{
+class UsuarioController{
     private $pdo;
+
+    public function index(){
+        Utils::esAdmin();
+        $usuario = new Usuario();
+        $usuarios = $usuario->getAll();
+        require_once './views/usuario/gestion.php';
+    }
 
     public function __construct()
     {
@@ -19,12 +29,21 @@ class UsuarioController
      */
     public function mostrarFormularioRegistro()
     {
-        require_once __DIR__ . 'views/usuario/registro.php';
+        require_once './views/usuario/registro.php';
     }
 
     public function mostrarFormularioLogin()
     {
-        require_once __DIR__ . 'views/usuario/login.php';
+        require_once './views/usuario/login.php';
+    }
+
+    public function mostrarFormularioGestion(){
+        Utils::esAdmin();
+
+        $usuario = new Usuario();
+        $usuarios = $usuario->getAll();
+
+        require_once './views/usuario/gestion.php';
     }
 
     /**
@@ -32,24 +51,26 @@ class UsuarioController
      */
     public function registrarUsuario()
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if (isset($_POST)) {
 
             $nombre = isset($_POST['nombre']) ? trim($_POST['nombre']) : false;
+            $apellidos = isset($_POST['apellidos']) ? $_POST['apellidos'] : false;
             $email = isset($_POST['email']) ? trim($_POST['email']) : false;
             $password = isset($_POST['password']) ? trim($_POST['password']) : false;
             $rol = 'usuario';
 
             // Validar datos
-            if ($nombre && $email && $password) {
+            if ($nombre && $apellidos && $email && $password) {
                 $usuario = new Usuario();
                 $usuario->setNombre($nombre);
+                $usuario->setApellidos($apellidos);
                 $usuario->setEmail($email);
                 $usuario->setPassword($password);
                 $usuario->setRol($rol);
-
+                $guardar = $usuario->guardarUsuario();
 
                 try {
-                    if ($usuario->guardarUsuario()) {
+                    if ($guardar) {
                         $_SESSION['registro'] = 'correcto';
                     } else {
                         $_SESSION['registro'] = "incorrecto";
@@ -65,8 +86,45 @@ class UsuarioController
             $_SESSION['registro'] = 'incorrecto';
         }
         header('Location: ' . URL_BASE . 'usuario/mostrarFormularioRegistro');
-        exit();
     }
+
+    public function editar(){
+        Utils::esAdmin();
+        if(isset($_GET['id'])){
+            $id = $_GET['id'];
+            $usuario = new Usuario();
+            $usuario->setId($id);
+            $usuar = $usuario->getUsuarioPorId($id);
+            require_once './views/usuario/editar.php';
+        } else {
+            header("Location:". URL_BASE . "usuario/gestion");
+        }
+    }
+
+    // public function actualizar(){
+    //     Utils::esAdmin();
+    //     if(isset($_POST['id'])){
+    //         $id = $_POST['id'];
+    //         $nombre = $_POST['nombre'];
+    //         $apellidos = $_POST['apellidos'];
+    //         $email = $_POST['email'];
+    //         $rol = $_POST['rol'];
+
+    //         $usuario = new Usuario();
+    //         $usuario->setId($id);
+    //         $usuario->setNombre($nombre);
+    //         $usuario->setApellidos($apellidos);
+    //         $usuario->setEmail($email);
+    //         $usuario->setRol($rol);
+    //         $actualizar = $usuario->actualizar();
+    //         $_SESSION['editar'] = $actualizar ? "correcto" : "incorrecto";
+    //     } else {
+    //         $_SESSION['editar'] = "incorrecto";
+    //         header("Location:". URL_BASE . "usuario/gestion");
+    //     }
+
+    // }
+
 
     /**
      * Maneja el inicio de sesión del usuario.
@@ -79,24 +137,17 @@ class UsuarioController
 
             $inicio = $usuario->login();
 
-            if ($inicio) {
+            if ($inicio && is_object($inicio)) {
                 echo "Inicio de sesión correcto";
 
-                $_SESSION['inicio'] = [
-                    'id' => $inicio->getId(),
-                    'nombre' => $inicio->getNombre(),
-                    'apellidos' => $inicio->getApellidos(),
-                    'email' => $inicio->getEmail(),
-                    'rol' => $inicio->getRol()
-                ];
+                $_SESSION['inicio'] = [$inicio];
 
                 if ($inicio->getRol() === 'admin') {
                     $_SESSION['admin'] = true;
                 }
             }
 
-            header('Location: ' . URL_BASE. 'usuario/mostarFormularioLogin');
-            exit();
+            header('Location: ' . URL_BASE);
         }
     }
 }

@@ -1,0 +1,11 @@
+RewriteEngine On
+
+#Asegurar que el modulo mod_rewrite esta activado
+<IfModule mod_rewrite.c>
+    #Redirigir todas las solicitudes a index.php, excepto archivos y directorios existentes
+    
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]
+
+</IfModule>

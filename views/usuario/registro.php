@@ -1,7 +1,3 @@
-<?php
-session_start();
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -17,15 +13,12 @@ session_start();
         <h1 class="text-2xl font-semibold text-center mb-5">Formulario de Registro</h1>
 
         <!-- Mostrar mensajes de sesion -->
-        <?php if ((isset($_SESSION['registro'])) && $_SESSION['registro'] == "correcto"): ?>
-            <div class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-100" role="alert">
-                <span class="font-medium">¡Registro completado con éxito!</span>
-            </div>
-        <?php elseif ((isset($_SESSION['registro'])) && $_SESSION['registro'] == "incorrecto"): ?>
-            <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-100" role="alert">
-                <span class="font-medium">El registro no se ha podido completar</span>
-            </div>
-        <?php endif ?>
+        <?php if (isset($_SESSION['registro']) && $_SESSION['registro'] == 'correcto'): ?>
+            <strong class="alert_green">Registro completado correctamente</strong>
+        <?php elseif (isset($_SESSION['registro']) && $_SESSION['registro'] == 'incorrecto'): ?>
+            <strong class="alert_red">Registro fallido</strong>
+        <?php endif; ?>
+
 
         <!-- Formulario de registro -->
         <form class="max-w-md mx-auto" action="<?= URL_BASE; ?>usuario/registrarUsuario" method="POST">
@@ -62,13 +55,13 @@ session_start();
             <button type="submit" class="w-full text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-800">
                 Registrarse
             </button>
-        
 
-        <!-- Enlace para iniciar sesión -->
-        <p class="mt-5 text-sm text-gray-500 dark:text-gray-400 text-center">
-            ¿Ya tienes una cuenta? <a href="<?= URL_BASE; ?>usuario/mostrarFormularioLogin" class="text-blue-600 hover:underline">Inicia sesión aquí</a>.
-        </p>
-    </form>    
+
+            <!-- Enlace para iniciar sesión -->
+            <p class="mt-5 text-sm text-gray-500 dark:text-gray-400 text-center">
+                ¿Ya tienes una cuenta? <a href="<?= URL_BASE; ?>usuario/mostrarFormularioLogin" class="text-blue-600 hover:underline">Inicia sesión aquí</a>.
+            </p>
+        </form>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js" defer></script>
 </body>
