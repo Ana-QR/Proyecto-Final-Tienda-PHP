@@ -8,12 +8,11 @@ use Models\Categoria;
 use Utils;
 
 class CategoriaController{
-    public function index(){
+    public function listarCategorias(){
         Utils::esAdmin(); // Verifica si es administrador antes de mostrar las categorias
 
         $categoria = new Categoria(); 
-        $categorias = $categoria->getAll();
-        require_once __DIR__ . '../views/categoria/index.php';
+        return $categoria->getAll();
     }
 
     public function crear(){

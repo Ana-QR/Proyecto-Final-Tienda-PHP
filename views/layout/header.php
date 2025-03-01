@@ -1,3 +1,12 @@
+<?php
+    require_once __DIR__ . '/../../controllers/CategoriaController.php';
+
+    use Controllers\CategoriaController;
+
+    $categoriaController = new CategoriaController();
+    $categorias = $categoriaController->listarCategorias();
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -62,6 +71,30 @@
                     <li><a href="/productos" class="block py-2 px-3 md:p-0 text-gray-700 rounded-sm hover:bg-gray-200 md:hover:bg-transparent 
                               md:hover:text-red-600 dark:text-black dark:hover:bg-gray-200 
                               dark:hover:text-black md:dark:hover:bg-transparent dark:border-gray-300">Productos</a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <nav class="bg-gray-800 p-4">
+            <div class="container mx-auto flex justify-between items-center">
+                <a href="<?php echo URL_BASE ?>" class="text-white text-lg font-semibold">Mi Tienda</a>
+                <ul class="flex space-x-4">
+                    <li><a href="<?php echo URL_BASE ?>" class="text-gray-300 hover:text-white">Inicio</a></li>
+                    <li class="relative">
+                        <button class="text-gray-300 hover:text-white focus:outline-none">
+                            Categorías ▼
+                        </button>
+                        <ul class="absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10 hidden group-hover:block">
+                            <?php foreach ($categorias as $categoria): ?>
+                                <li>
+                                    <a href="<?php echo URL_BASE ?>categoria/ver&id=<?php echo $categoria['id'] ?>" class="block px-4 py-2 text-gray-800 hover:bg-gray-200">
+                                        <?php echo htmlspecialchars($categoria['nombre']) ?>
+                                    </a>
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    </li>
+                    <li><a href="<?php echo URL_BASE ?>contacto" class="text-gray-300 hover:text-white">Contacto</a></li>
                 </ul>
             </div>
         </nav>
