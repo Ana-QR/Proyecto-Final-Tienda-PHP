@@ -9,8 +9,10 @@ require_once __DIR__ . '/controllers/UsuarioController.php';
 
 use Controllers\ErrorController;
 use Controllers\UsuarioController;
+use Models\Usuario;
 
 $usuario = new UsuarioController();
+
 
 // Cabecera de la pagina
 require_once __DIR__ . '/views/layout/header.php';
@@ -85,6 +87,22 @@ if ($controlador == 'usuario' && $accion == 'registro') {
 if ($controlador == 'usuario' && $accion == 'login') {
     $usuarioController = new UsuarioController();
     $usuarioController->login();
+}
+
+//Verificar si la cookie existe
+if (isset($_COOKIE['remember'])){
+    $usuario = new Usuario();
+
+    $usuario->setId($_COOKIE['remember']);
+    $inicio = $usuario->getUsuarioPorId($usuario->getId());
+
+    if($inicio && is_object($inicio)){
+        $_SESSION['inicio'] = $inicio;
+
+        if($inicio->getRol() === 'admin'){
+            $_SESSION['admin'] = true;
+        }
+    }
 }
 
 ob_end_flush();

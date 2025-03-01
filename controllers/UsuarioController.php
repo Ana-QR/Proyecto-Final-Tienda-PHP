@@ -155,7 +155,24 @@ class UsuarioController{
                 }
             }
 
+            //Verificar si el checkbox "Recuerdame" está marcado
+            if (isset($_POST['remember']) && $_POST['remember'] == 'on'){
+                //Crear una cookie para recordar al usuario, con duracion de 7 dias
+                setcookie('remember', $inicio->getId(), time() + (7 * 24 * 60 * 60), '/'); //Caduca en 7 dias
+            }
+
+            //Redirigir a la pagina principal
             header('Location: ' . URL_BASE);
         }
+    }
+
+    public function logout(){
+        if(isset($_SESSION['usuario'])){
+            unset($_SESSION['usuario']);
+        }
+        if(isset($_SESSION['admin'])){
+            unset($_SESSION['admin']);
+        }
+        header("Location:".URL_BASE);
     }
 }
