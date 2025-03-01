@@ -12,8 +12,8 @@
     <header id="header">
         <nav class="bg-white border-gray-300">
             <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-                <a href="/" class="flex items-center space-x-3 rtl:space-x-reverse">
-                    <img src="assets/img/logo.jpg" class="h-8 w-auto" alt="Logo" loading="lazy" />
+                <a href="ProyectoFinal/" class="flex items-center space-x-3 rtl:space-x-reverse">
+                <img src="<?=URL_BASE?>assets/img/logo.jpg" alt="Logo" class="h-16 md:h-12 w-auto">
                     <span class="self-left text-2xl font-semibold whitespace-nowrap text-black">Tienda Vinilos</span>
                 </a>
 

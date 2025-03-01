@@ -1,3 +1,9 @@
+<?php
+session_start();
+require_once __DIR__ . '/../../config/param.php';
+require_once __DIR__ . '/../../config/config.php';
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -12,6 +18,7 @@
     <div class="w-full max-w-md bg-white p-6 rounded-lg shadow-md">
         <h1 class="text-2xl font-semibold text-center mb-5">Formulario de Registro</h1>
 
+
         <!-- Mostrar mensajes de sesion -->
         <?php if (isset($_SESSION['registro']) && $_SESSION['registro'] == 'correcto'): ?>
             <strong class="alert_green">Registro completado correctamente</strong>
@@ -25,8 +32,15 @@
             <!--Nombre-->
             <div class="mb-5">
                 <p>Nombre</p>
-                <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nombre</label>
-                <input type="text" id="name" name="name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required />
+                <label for="nombre" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Nombre</label>
+                <input type="text" id="nombre" name="nombre" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required />
+            </div>
+
+            <!--Nombre-->
+            <div class="mb-5">
+                <p>Apellidos</p>
+                <label for="apellido" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Apellidos</label>
+                <input type="text" id="apellido" name="apellido" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required />
             </div>
 
             <!--Campo de solicitud de correo electrónico-->

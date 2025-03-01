@@ -16,7 +16,7 @@ class UsuarioController{
         Utils::esAdmin();
         $usuario = new Usuario();
         $usuarios = $usuario->getAll();
-        require_once './views/usuario/gestion.php';
+        require_once __DIR__ . '../views/usuario/gestion.php';
     }
 
     public function __construct()
@@ -27,23 +27,31 @@ class UsuarioController{
     /**
      * Muestra el formulario de registro de usuario.
      */
-    public function mostrarFormularioRegistro()
+    public function registro()
     {
-        require_once './views/usuario/registro.php';
+        session_start();
+        
+        require_once __DIR__ .'../views/usuario/registro.php';
     }
 
-    public function mostrarFormularioLogin()
+    public function login()
     {
-        require_once './views/usuario/login.php';
+        session_start();
+            if(isset($_SESSION['usuario'])){
+                //si ya esta logueado lo manda al inicio
+                header("Location:".URL_BASE."index");
+                exit();
+            }
+        require_once __DIR__ .'../views/usuario/login.php';
     }
 
-    public function mostrarFormularioGestion(){
+    public function gestion(){
         Utils::esAdmin();
 
         $usuario = new Usuario();
         $usuarios = $usuario->getAll();
 
-        require_once './views/usuario/gestion.php';
+        require_once __DIR__ .'../views/usuario/gestion.php';
     }
 
     /**
@@ -85,7 +93,7 @@ class UsuarioController{
         } else {
             $_SESSION['registro'] = 'incorrecto';
         }
-        header('Location: ' . URL_BASE . 'usuario/mostrarFormularioRegistro');
+        header('Location: ' . URL_BASE . 'usuario/login');
     }
 
     public function editar(){
@@ -129,7 +137,7 @@ class UsuarioController{
     /**
      * Maneja el inicio de sesión del usuario.
      */
-    public function inicioUsuario(){
+    public function loginUsuario(){
         if (isset($_POST)) {
             $usuario = new Usuario();
             $usuario->setEmail($_POST['email']);

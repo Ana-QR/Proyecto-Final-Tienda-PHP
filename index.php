@@ -3,6 +3,7 @@
 ob_start();
 session_start();
 require_once __DIR__ . '/config/param.php';
+require_once __DIR__ . '/config/config.php';
 require_once __DIR__ . '/autoload.php';
 require_once __DIR__ . '/controllers/UsuarioController.php';
 
@@ -15,8 +16,8 @@ $usuario = new UsuarioController();
 require_once __DIR__ . '/views/layout/header.php';
 
 /**
- * Function to display the error page.
- * This function creates an instance of the ErrorController and calls its index method.
+ * Función para mostrar la página de error.
+ * Esta función crea una instancia de ErrorController y llama a su método de index.
  */
 function show_error()
 {
@@ -72,6 +73,19 @@ if(class_exists($nombre_controlador)){
 }
 
 require_once __DIR__ . '/views/layout/footer.php';
+
+
+$controlador = $_GET['controller'] ?? 'inicio';
+$accion = $_GET['action'] ?? 'index';
+
+if ($controlador == 'usuario' && $accion == 'registro') {
+    $usuarioController = new UsuarioController();
+    $usuarioController->registro();
+}
+if ($controlador == 'usuario' && $accion == 'login') {
+    $usuarioController = new UsuarioController();
+    $usuarioController->login();
+}
 
 ob_end_flush();
 ?>

@@ -1,5 +1,7 @@
 <?php
 session_start();
+require_once __DIR__ . '/../../config/param.php';
+require_once __DIR__ . '/../../config/config.php';
 ?>
 
 <!DOCTYPE html>
@@ -17,8 +19,8 @@ session_start();
         <h1 class="text-2xl font-semibold text-center mb-5">Iniciar sesión</h1>
 
         <!-- Mostrar mensajes de sesion -->
-        <?php if (isset($_SESSION['success'])) : ?>
-            <p class="text-green-500"><?php echo $_SESSION['success']; unset($_SESSION['success']); ?></p>
+        <?php if (isset($_SESSION['login']) && $_SESSION['login'] == 'correcto'): ?>
+            <strong class="alert_green">Inicio de sesion completado correctamente</strong>
         <?php endif; ?>
 
         <!-- Mostrar mensajes de error -->
@@ -27,7 +29,7 @@ session_start();
         <?php endif; ?>
 
         <!-- Formulario de inicio de sesión -->
-        <form action="<?= URL_BASE ?>usuario/inicioUsuario" method="POST">
+        <form action="<?= URL_BASE ?>usuario/loginUsuario" method="POST">
             <!-- Campos del formulario -->
             <!--Campo de solicitud de correo electrónico-->
             <div class="mb-5">
