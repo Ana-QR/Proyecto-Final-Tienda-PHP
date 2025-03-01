@@ -13,8 +13,9 @@ class Utils{
 
 
     public static function esAdmin() {
-        if (!isset($_SESSION['admin'])) {
+        if (!isset($_SESSION['admin']) || $_SESSION['admin'] != true) {
             header("Location:". URL_BASE);
+            exit();
         }else{
             return true;
         }
