@@ -42,12 +42,12 @@ require_once __DIR__ . '/../../config/config.php';
                 <input type="password" id="password" name="password" class="w-full p-2 bg-gray-700 border border-gray-600 rounded-md text-white" required />
             </div>
             <div class="flex items-center">
-                <input id="remember" name="remember" type="checkbox" value="1" class="w-4 h-4 border border-gray-600 bg-gray-700 focus:ring-yellow-500">
-                <label for="remember" class="ml-2 text-sm text-yellow-400">Recuérdame</label>
+                <input id="recuerdame" name="recuerdame" type="checkbox" value="1" class="w-4 h-4 border border-gray-600 bg-gray-700 focus:ring-yellow-500">
+                <label for="recuerdame" class="ml-2 text-sm text-yellow-400">Recuérdame</label>
             </div>
             <button type="submit" class="w-full bg-yellow-400 text-black font-bold py-2 px-4 rounded-md hover:bg-yellow-500 transition">Registrarse</button>
             <p class="text-sm text-center">
-                ¿Ya tienes una cuenta? <a href="<?= URL_BASE; ?>usuario/mostrarFormularioLogin" class="text-yellow-400 hover:underline">Inicia sesión aquí</a>.
+                ¿Ya tienes una cuenta? <a href="<?= URL_BASE; ?>usuario/login" class="text-yellow-400 hover:underline">Inicia sesión aquí</a>.
             </p>
         </form>
     </div>
