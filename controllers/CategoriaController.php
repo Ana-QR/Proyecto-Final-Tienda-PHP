@@ -7,6 +7,16 @@ use Models\Producto;
 
 class CategoriaController{
 
+    public function index()
+    {
+        Utils::esAdmin(); // Verifica si es administrador antes de mostrar las categorías
+
+        $categoria = new Categoria();
+        $categorias = $categoria->getCategorias();
+
+        require_once __DIR__ . '/../views/categoria/indexCat.php';
+    }
+
     public function default(){
         Utils::esAdmin(); // Verifica si es administrador antes de mostrar las categorias
 
@@ -19,7 +29,7 @@ class CategoriaController{
     public function crearCategoria(){
         Utils::esAdmin(); // Solo los administradores pueden crear categorias
 
-        require_once 'views/categoria/crear.php';
+        require_once __DIR__ . '/../views/categoria/crear.php';
     }
 
     public function guardarCategoria(){

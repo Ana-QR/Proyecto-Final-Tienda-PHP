@@ -18,30 +18,26 @@ function mostrarError(){
 
 if(isset($_GET['controller'])){
     $nombre_controlador = 'Controllers\\' . ucfirst($_GET['controller']) . 'Controller';
-} elseif(!isset($_GET['controller']) && !isset($_GET['action'])) {
+}elseif(!isset($_GET['controller']) && !isset($_GET['action'])){
     // Configurado en el .htaccess 
     $nombre_controlador = 'Controllers\\' . ucfirst(controlador_base) . 'Controller';
-} else {
-    echo "Controlador no encontrado";
-    mostrarError();
-    exit();
 }
 
-if(class_exists($nombre_controlador)){
+if(isset($nombre_controlador) && class_exists($nombre_controlador)){
     // Creo un nuevo objeto de la clase controladora
     $controlador = new $nombre_controlador();
     // Invocando los métodos automáticamente
     if(isset($_GET['action']) && method_exists($controlador, $_GET['action'])){
         $action = $_GET['action'];
         $controlador->$action();
-    } elseif(!isset($_GET['controller']) && !isset($_GET['action'])) {
+    }elseif(!isset($_GET['controller']) && !isset($_GET['action'])){
         $action_default = accion_por_defecto;
         $controlador->$action_default();
-    } else {
+    }else{
         echo "La acción no se ha encontrado";
         mostrarError();
     }
-} else {
+}else{
     echo "El controlador no se ha encontrado";
     mostrarError();
 }

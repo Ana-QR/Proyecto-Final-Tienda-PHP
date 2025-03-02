@@ -72,7 +72,7 @@ if (!isset($_SESSION['log']) && isset($_COOKIE['recuerdame'])) {
                             </a>
                         </li>
                         <li>
-                            <a href="<?= URL_BASE ?>categoria/index" class="block px-3 py-2 text-white rounded-sm md:p-0 hover:bg-gray-600 md:hover:bg-transparent md:hover:text-yellow-400">
+                            <a href="<?= URL_BASE ?>categoria/indexCat" class="block px-3 py-2 text-white rounded-sm md:p-0 hover:bg-gray-600 md:hover:bg-transparent md:hover:text-yellow-400">
                                 Categorías
                             </a>
                         </li>

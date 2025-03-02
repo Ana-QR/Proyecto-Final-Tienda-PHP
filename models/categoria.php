@@ -4,6 +4,7 @@ namespace Models;
 
 use Lib\Conexion;
 use PDOException;
+use PDO;
 use Utils\Utils;
 
 class Categoria{
@@ -34,15 +35,15 @@ class Categoria{
 
     // Listar todas las categorias
     public function getCategorias(){
-        try {
-            $stmt = $this->db->getPdo()->prepare("SELECT * FROM categorias");
-            $stmt->execute();
-            $categorias = $stmt->fetchAll();
-            return $categorias;
-        } catch (PDOException $e) {
-            error_log("Error al obtener las categorías: " . $e->getMessage());
-            return false;
-        }
+        $conexion = new Conexion();
+        $pdo = $conexion->getPdo();
+
+        $stmt = $pdo->query("SELECT * FROM categorias");
+        $categorias = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $conexion->close();
+
+        return $categorias;
     }
 
     public function getCategoria(){
@@ -60,20 +61,15 @@ class Categoria{
 
     // Guardar una categoria
     public function guardar(){
-        // Validar el nombre de la categoría
-        if (preg_match('/^[a-zA-ZáéíóúÁÉÍÓÚ\s]{3,}$/', $this->nombre)) {
-            try {
-            $stmt = $this->db->getPDO()->prepare("INSERT INTO categorias (nombre) VALUES (:nombre)");
-            $stmt->bindParam(':nombre', $this->nombre);
-            return $stmt->execute();
-            } catch (PDOException $e) {
-            error_log("Error al guardar la categoría: " . $e->getMessage());
-            return false;
-            }
-        } else {
-            $_SESSION['errorCategoria'] = 'true';
-            return false;
-        }
+        $conexion = new Conexion();
+        $pdo = $conexion->getPdo();
+
+        $stmt = $pdo->prepare("INSERT INTO categorias (nombre) VALUES (:nombre)");
+        $stmt->bindParam(':nombre', $this->nombre);
+
+        $stmt->execute();
+
+        $conexion->close();
     }
 }
 ?>
