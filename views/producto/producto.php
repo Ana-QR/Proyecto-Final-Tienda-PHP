@@ -4,10 +4,6 @@
     require_once URL_BASE . 'models/Categoria.php';
     require_once URL_BASE . 'helpers/Utils.php';
 
-    if (!isset($_SESSION)) {
-        session_start();
-    }
-
     if (!isset($_SESSION['usuario'])) {
         header('Location: ' . URL_BASE . 'usuario/login.php');
     }

@@ -5,6 +5,8 @@ namespace Models;
 use Lib\Conexion;
 use PDO;
 use PDOException;
+use Exception;
+use Utils;
 
 class Usuario
 {
@@ -95,6 +97,11 @@ class Usuario
     public function guardarUsuario()
     {
         try {
+            //Comprobar que la conexion esta activada
+            if (!$this->db->getPdo()) {
+                throw new Exception("Error en la conexión a la base de datos", 1);
+            }
+
             $hashedPassword = password_hash($this->password, PASSWORD_BCRYPT, ['cost' => 4]);
 
             $rol = $this->rol ? $this->rol : 'user'; //crear usuarios que sean admin
@@ -114,6 +121,40 @@ class Usuario
         }
     }
 
+    public function guardarAdmin(){
+        $sql = "INSERT INTO usuarios (nombre, apellidos, email, password, rol) VALUES (:nombre, :apellidos, :email, :password, :rol)";
+        $guardar = $this->db->getPdo()->prepare($sql);
+        return $guardar ? true : false;
+    }
+
+    public function crear(){
+        Utils::esAdmin();
+        require_once __DIR__ . '/../views/usuario/crear.php';
+    }
+
+    public function actualizar(){
+        $sql = "UPDATE usuarios SET nombre = :nombre, apellidos = :apellidos, email = :email, rol = :rol WHERE id = :id";
+
+        if (!empty($this->password)) {
+            $sql .= ", password = '{$this->password}'"; // Si se ha enviado una nueva contraseña, la actualizamos
+        }
+
+        // Solo actualizamos el rol si el usuario es admin
+        if(isset($_SESSION['admin']) && $_SESSION['admin']){
+            $sql .= ", rol = '{$this->rol}'";
+        }
+
+        $sql .= " WHERE id = {$this->getId()}";
+
+        return $this->db->getPdo()->query($sql);
+    }
+
+    public function borrar(){
+        $sql = "DELETE FROM usuarios WHERE id = {$this->getId()}";
+        $borrar = $this->db->getPdo()->query($sql);
+        return $borrar ? true : false;
+    }
+
     // Metodo para obtener todos los usuarios cuando eres admin
     public function getAll()
     {
@@ -122,7 +163,7 @@ class Usuario
         return $usuarios;
     }
 
-    public function getUsuarioPorId($id)
+    public function getPorId($id)
     {
         $sql = "SELECT * FROM usuarios WHERE id = $id";
         $usuario = $this->db->getPdo()->query($sql);

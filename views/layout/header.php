@@ -4,7 +4,7 @@
     use Controllers\CategoriaController;
 
     $categoriaController = new CategoriaController();
-    $categorias = $categoriaController->listarCategorias();
+    $categorias = $categoriaController->porDefecto();
 
 ?>
 <!DOCTYPE html>

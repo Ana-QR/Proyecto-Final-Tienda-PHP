@@ -1,29 +1,37 @@
-<div id="gestion_usuarios">
+<div id="gestion-productos" class="p-6">
+    <h1 class="text-2xl font-bold mb-4">Gestion Productos</h1>
 
-<h1>Gestionar Usuarios</h1>
+    <a href="<?= URL_BASE ?>producto/crear" class="bg-blue-500 text-white py-2 px-4 rounded mb-4 inline-block">
+        Crear Producto
+    </a>
 
-<table>
-    <tr>    
-        <th>ID</th>
-        <th>Nombre</th>
-        <th>Apellidos</th>
-        <th>Email</th>
-        <th>Rol</th>
-        <th>Acciones</th>
-    </tr>
-    <?php while($user = $usuarios->fetch_object()): ?>
-    <tr>    
-        <td><?= $user->id; ?></td>
-        <td><?= $user->nombre; ?></td>
-        <td><?= $user->apellidos; ?></td>
-        <td><?= $user->email; ?></td>
-        <td><?= $user->rol; ?></td>
-        <td>
-            <a href="<?php echo URL_BASE; ?>usuario/editar&id=<?php echo $user->id; ?>">Editar</a>
-            <a href="<?php echo URL_BASE; ?>usuario/eliminar&id=<?php echo $user->id; ?>">Eliminar</a>
-        </td>
-    </tr>
-    <?php endwhile; ?>
-</table>
+    <?php Utils::borrarSesion('producto'); ?>
 
+    <div class="overflow-x-auto">
+        <table class="min-w-full bg-white border border-gray-200">
+            <thead>
+                <tr>
+                    <th class="px-4 py-2 border-b">ID</th>
+                    <th class="px-4 py-2 border-b">NOMBRE</th>
+                    <th class="px-4 py-2 border-b">PRECIO</th>
+                    <th class="px-4 py-2 border-b">STOCK</th>
+                    <th class="px-4 py-2 border-b">ACCIONES</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php while ($pro = $productos->fetch_object()): ?>
+                    <tr>
+                        <td class="px-4 py-2 border-b"><?= $pro->id; ?></td>
+                        <td class="px-4 py-2 border-b"><?= $pro->nombre; ?></td>
+                        <td class="px-4 py-2 border-b"><?= $pro->precio; ?> €</td>
+                        <td class="px-4 py-2 border-b"><?= $pro->stock; ?></td>
+                        <td class="px-4 py-2 border-b">
+                            <a href="<?= URL_BASE ?>producto/editar&id=<?= $pro->id ?>" class="text-blue-500 hover:underline mr-2">Editar</a>
+                            <a href="<?= URL_BASE ?>producto/eliminar&id=<?= $pro->id ?>" class="text-red-500 hover:underline" onclick="return confirm('¿Estás seguro de eliminar este producto?')">Eliminar</a>
+                        </td>
+                    </tr>
+                <?php endwhile; ?>
+            </tbody>
+        </table>
+    </div>
 </div>
