@@ -86,9 +86,6 @@ class UsuarioController
         } else {
             $_SESSION['registro'] = 'incorrecto';
         }
-
-        header('Location: '. URL_BASE);
-        exit();
     }
     
     public function loginUsuario(){
@@ -126,7 +123,7 @@ class UsuarioController
             } else {
                 // Si el usuario no existe, se redirige al formulario de login con un mensaje de error
                 $_SESSION['error_login'] = 'Identificación fallida';
-                header('Location: ' . URL_BASE . 'usuario/cargarFormLogin');
+                header('Location: ' . URL_BASE . 'usuario/login');
             }
         }
     }
