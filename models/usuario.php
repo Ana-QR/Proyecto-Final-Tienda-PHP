@@ -104,14 +104,14 @@ class Usuario
 
             $hashedPassword = password_hash($this->password, PASSWORD_BCRYPT, ['cost' => 4]);
 
-            $rol = $this->rol ? $this->rol : 'user'; //crear usuarios que sean admin
+            $rol = $this->rol ? $this->rol : 'usuario'; //crear usuarios que sean admin
 
             $stmt = $this->db->getPdo()->prepare("INSERT INTO usuarios (nombre, apellidos, email, password, rol) VALUES (:nombre, :apellidos, :email, :password, :rol)");
             $stmt->bindValue(':nombre', $this->nombre);
             $stmt->bindValue(':apellidos', $this->apellidos);
             $stmt->bindValue(':email', $this->email);
-            $stmt->bindValue(':password', $this->password);
-            $stmt->bindValue(':rol', $this->rol);
+            $stmt->bindValue(':password', $hashedPassword);
+            $stmt->bindValue(':rol', $rol);
             return $stmt->execute();
         } catch (PDOException $e) {
             // Registrar el mensaje de error para propósitos de depuración
@@ -122,9 +122,20 @@ class Usuario
     }
 
     public function guardarAdmin(){
-        $sql = "INSERT INTO usuarios (nombre, apellidos, email, password, rol) VALUES (:nombre, :apellidos, :email, :password, :rol)";
-        $guardar = $this->db->getPdo()->prepare($sql);
-        return $guardar ? true : false;
+        try {
+            $hashedPassword = password_hash($this->password, PASSWORD_BCRYPT, ['cost' => 4]);
+            $sql = "INSERT INTO usuarios (nombre, apellidos, email, password, rol) VALUES (:nombre, :apellidos, :email, :password, :rol)";
+            $guardar = $this->db->getPdo()->prepare($sql);
+            $guardar->bindValue(':nombre', $this->nombre);
+            $guardar->bindValue(':apellidos', $this->apellidos);
+            $guardar->bindValue(':email', $this->email);
+            $guardar->bindValue(':password', $hashedPassword);
+            $guardar->bindValue(':rol', 'admin');
+            return $guardar->execute();
+        } catch (PDOException $e) {
+            error_log("Error al guardar el admin: " . $e->getMessage());
+            return false;
+        }
     }
 
     public function crear(){
@@ -133,26 +144,50 @@ class Usuario
     }
 
     public function actualizar(){
-        $sql = "UPDATE usuarios SET nombre = :nombre, apellidos = :apellidos, email = :email, rol = :rol WHERE id = :id";
-
-        if (!empty($this->password)) {
-            $sql .= ", password = '{$this->password}'"; // Si se ha enviado una nueva contraseña, la actualizamos
+        try {
+            $sql = "UPDATE usuarios SET nombre = :nombre, apellidos = :apellidos, email = :email";
+            
+            if (!empty($this->password)) {
+                $sql .= ", password = :password";
+            }
+    
+            // Solo actualizar el rol si el usuario es admin
+            if (isset($_SESSION['admin']) && $_SESSION['admin']) {
+                $sql .= ", rol = :rol";
+            }
+    
+            $sql .= " WHERE id = :id";
+    
+            $stmt = $this->db->getPdo()->prepare($sql);
+            $stmt->bindValue(':nombre', $this->nombre);
+            $stmt->bindValue(':apellidos', $this->apellidos);
+            $stmt->bindValue(':email', $this->email);
+            if (!empty($this->password)) {
+                $hashedPassword = password_hash($this->password, PASSWORD_BCRYPT, ['cost' => 4]);
+                $stmt->bindValue(':password', $hashedPassword);
+            }
+            if (isset($_SESSION['admin']) && $_SESSION['admin']) {
+                $stmt->bindValue(':rol', $this->rol);
+            }
+            $stmt->bindValue(':id', $this->id);
+    
+            return $stmt->execute();
+        } catch (PDOException $e) {
+            error_log("Error al actualizar el usuario: " . $e->getMessage());
+            return false;
         }
-
-        // Solo actualizamos el rol si el usuario es admin
-        if(isset($_SESSION['admin']) && $_SESSION['admin']){
-            $sql .= ", rol = '{$this->rol}'";
-        }
-
-        $sql .= " WHERE id = {$this->getId()}";
-
-        return $this->db->getPdo()->query($sql);
     }
 
     public function borrar(){
-        $sql = "DELETE FROM usuarios WHERE id = {$this->getId()}";
-        $borrar = $this->db->getPdo()->query($sql);
-        return $borrar ? true : false;
+        try {
+            $sql = "DELETE FROM usuarios WHERE id = :id";
+            $stmt = $this->db->getPdo()->prepare($sql);
+            $stmt->bindValue(':id', $this->id);
+            return $stmt->execute();
+        } catch (PDOException $e) {
+            error_log("Error al borrar usuario: " . $e->getMessage());
+            return false;
+        }
     }
 
     // Metodo para obtener todos los usuarios cuando eres admin
@@ -165,9 +200,16 @@ class Usuario
 
     public function getPorId($id)
     {
-        $sql = "SELECT * FROM usuarios WHERE id = $id";
-        $usuario = $this->db->getPdo()->query($sql);
-        return $usuario->fetch(PDO::FETCH_OBJ);
+        try {
+            $sql = "SELECT * FROM usuarios WHERE id = :id";
+            $stmt = $this->db->getPdo()->prepare($sql);
+            $stmt->bindValue(':id', $id);
+            $stmt->execute();
+            return $stmt->fetch(PDO::FETCH_OBJ);
+        } catch (PDOException $e) {
+            error_log("Error al obtener usuario por ID: " . $e->getMessage());
+            return false;
+        }
     }
 
     // Método para login de usuarios

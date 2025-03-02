@@ -13,7 +13,7 @@ class UsuarioController
     {
         Utils::esAdmin(); // Solo los administradores pueden acceder a la gestión de usuarios
         $usuario = new Usuario();
-        $usuarios = $usuario->getAll();
+        $usuario->getAll();
         require_once __DIR__ . '/../views/usuario/gestion.php';
     }
 
@@ -95,7 +95,7 @@ class UsuarioController
                 $_SESSION['error_message'] = "Hubo un problema al registrarse. Inténtalo de nuevo.";
             }
         } else {
-            $_SESSION['register'] = "incorrecto";
+            $_SESSION['registro'] = "incorrecto";
         }
 
         header("Location: " . URL_BASE . "usuario/registro");
@@ -111,7 +111,7 @@ class UsuarioController
             session_start();
         }
 
-        if (isset($_POST)) {
+        if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $nombre = isset($_POST['nombre']) ? $_POST['nombre'] : false;
             $apellidos = isset($_POST['apellidos']) ? $_POST['apellidos'] : false;
             $email = isset($_POST['email']) ? $_POST['email'] : false;
@@ -123,7 +123,7 @@ class UsuarioController
                 $usuario->setNombre($nombre);
                 $usuario->setApellidos($apellidos);
                 $usuario->setEmail($email);
-                $usuario->setPassword($password);
+                $usuario->setPassword(password_hash($password, PASSWORD_BCRYPT));
                 $usuario->setRol($rol);
 
                 $guardar = $usuario->guardarAdmin();
@@ -253,7 +253,14 @@ class UsuarioController
             // Solo los administradores pueden cambiar el rol
             if (isset($_SESSION['admin']) && $_SESSION['admin']) {
                 $rol = $_POST['rol'];
-                $usuario->setRol($rol);
+                $allowed_roles = ['admin', 'user'];
+                if (in_array($rol, $allowed_roles)) {
+                    $usuario->setRol($rol);
+                } else {
+                    $_SESSION['edit'] = "incorrecto";
+                    header("Location:" . URL_BASE . "usuario/gestion");
+                    exit();
+                }
             }
 
             // Solo se actualiza la contraseña si se ha introducido una nueva
@@ -262,7 +269,7 @@ class UsuarioController
             }
 
             $update = $usuario->actualizar();
-            $_SESSION['edit'] = $update ? "complete" : "failed";
+            $_SESSION['edit'] = $update ? "correcto" : "incorrecto";
         }
 
         header("Location:" . URL_BASE . "usuario/gestion");

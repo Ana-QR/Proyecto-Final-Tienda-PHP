@@ -47,28 +47,28 @@ class ProductoController {
                 $producto->setStock($stock);
                 $producto->setCategoriaId($categoria);
 
-            if(isset($_FILES['imagen'])){
-                $file = $_FILES['imagen'];
-                $filename = $file['name'];
-                $mimetype = $file['type'];
+                if(isset($_FILES['imagen'])){
+                    $file = $_FILES['imagen'];
+                    $filename = $file['name'];
+                    $mimetype = $file['type'];
 
-                if($mimetype == 'image/jpg' || $mimetype == 'image/jpeg' || $mimetype == 'image/png' || $mimetype == 'image/gif'){
-                    if(!is_dir('assets/images')){
-                        mkdir('assets/images', 0777, true);
+                    if($mimetype == 'image/jpg' || $mimetype == 'image/jpeg' || $mimetype == 'image/png' || $mimetype == 'image/gif'){
+                        if(!is_dir('assets/img')){
+                            mkdir('assets/img', 0777, true);
+                        }
+
+                        move_uploaded_file($file['tmp_name'], 'assets/img/'.$filename);
+                        $producto->setImagen($filename);
                     }
-
-                    move_uploaded_file($file['tmp_name'], 'assets/images/'.$filename);
-                    $producto->setImagen($filename);
                 }
-            }
 
-            $producto->guardar();
+                $producto->guardar();
 
-            if(!isset($_SESSION['errorProducto'])){
-                header('Location: '. URL_BASE . 'producto/gestion');
-            } else {
-                header('Location: '. URL_BASE . 'producto/crear');
-            }
+                if(!isset($_SESSION['errorProducto'])){
+                    header('Location: '. URL_BASE . 'producto/gestion');
+                } else {
+                    header('Location: '. URL_BASE . 'producto/crear');
+                }
             } else {
                 $_SESSION['errorProducto'] = "true";
                 header('Location: '. URL_BASE . 'producto/crear');
@@ -76,23 +76,5 @@ class ProductoController {
 
         }
     }
-
-    // // Método para obtener un producto específico por ID
-    // public function ver() {
-    //     if (isset($_GET['id']) && filter_var($_GET['id'], FILTER_VALIDATE_INT)) {
-    //         $id = (int) $_GET['id'];
-    //         $producto = new Producto();
-    //         $productoData = $producto->getPorId($id);
-
-    //         if ($productoData) {
-    //             require_once __DIR__ . '/../views/producto/ver.php';
-    //         } else {
-    //             header("Location: " . URL_BASE . "producto/listar");
-    //             exit();
-    //         }
-    //     } else {
-    //         header("Location:".URL_BASE."producto/listar");
-    //         exit();
-    //     }
-    // }
 }
+?>

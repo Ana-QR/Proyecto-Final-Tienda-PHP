@@ -25,7 +25,7 @@ class Utils{
 
     public static function mostrarCategorias(){
         $categoria = new Categoria();
-        $categorias = $categoria->getAllCategorias();
+        $categorias = $categoria->getCategorias();
         return $categorias;
     }
 }

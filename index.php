@@ -11,7 +11,6 @@ use Controllers\ErrorController;
 
 require_once __DIR__.'/views/layout/header.php'; // Layout header
 
-
 function mostrarError(){
     $error = new ErrorController();
     $error->index();
@@ -21,14 +20,10 @@ if(isset($_GET['controller'])){
     $nombre_controlador = 'Controllers\\' . ucfirst($_GET['controller']) . 'Controller';
 }elseif(!isset($_GET['controller']) && !isset($_GET['action'])){
     // Configurado en el .htaccess 
-    $nombre_controlador = 'Controllers\\' . controlador_base . 'Controller';
-    // Si no existe el controlador, llama la función de errores
-    echo "La página que buscas no se ha encontrado";
-    mostrarError();
-    exit();
+    $nombre_controlador = 'Controllers\\' . ucfirst(controlador_base) . 'Controller';
 }
 
-if(isset($nombre_controlador)){
+if(isset($nombre_controlador) && class_exists($nombre_controlador)){
     // Creo un nuevo objeto de la clase controladora
     $controlador = new $nombre_controlador();
     // Invocando los métodos automáticamente
@@ -39,7 +34,7 @@ if(isset($nombre_controlador)){
         $action_default = accion_por_defecto;
         $controlador->$action_default();
     }else{
-        echo "La accion por defecto no se ha encontrado";
+        echo "La acción no se ha encontrado";
         mostrarError();
     }
 }else{
