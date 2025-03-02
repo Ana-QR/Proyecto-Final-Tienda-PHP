@@ -6,13 +6,14 @@ use Helpers\Utils;
 use Models\Producto;
 
 class CategoriaController{
+
     public function default(){
         Utils::esAdmin(); // Verifica si es administrador antes de mostrar las categorias
 
         $categoria = new Categoria(); 
-        return $categoria->getCategorias();
+        $categoria = $categoria->getCategorias();
 
-        require_once 'views/categoria/index.php';
+        require_once 'views/categoria/indexCat.php';
     }
 
     public function crearCategoria(){
@@ -22,7 +23,7 @@ class CategoriaController{
     }
 
     public function guardarCategoria(){
-        Utils::esAdmin(); // Solo los administradores pueden guardar categorias
+        Utils::esAdmin(); 
 
         if(isset($_POST) && isset($_POST['nombre'])){
             $categoria = new Categoria();
@@ -38,20 +39,18 @@ class CategoriaController{
         }else{
             $_SESSION['categoria'] = "incorrecto";
         }
-
-        header("Location:".URL_BASE."categoria/indexCat");
     }
 
     public function verCategoria(){
         if(isset($_GET['id'])){
-            $id = (int) $_GET['id'];
+            $id = $_GET['id'];
             $categoria = new Categoria();
             $categoria->setId($_GET['id']);
             $categoria = $categoria->getCategoria();
 
             $producto = new Producto();
             $producto->setCategoriaId($id);
-            $productos = $producto->getProductosCategoria($id);
+            $productos = $producto->getProductosCategoria();
         }
         require_once 'views/categoria/ver.php';
     }

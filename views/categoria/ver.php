@@ -27,5 +27,5 @@
     <?php endif; ?>
     
 <?php else: ?>
-    <h1>La categoria no existe</h1>
+    <h1>No existe dicha categoria</h1>
 <?php endif; ?>

@@ -23,7 +23,7 @@ class Producto {
         $this->db = new Conexion();
     }
 
-    //? ************* GETTERS DE LA CLASE *************
+    // Getters
     public function getId() {
         return $this->id;
     }
@@ -60,6 +60,7 @@ class Producto {
         return $this->imagen;
     }
 
+    // Setters
     public function setId($id) {
         $this->id = $id;
     }
@@ -96,6 +97,7 @@ class Producto {
         $this->imagen = $imagen;
     }
 
+    // Obtener todos los productos
     public function getProductos() {
         try {
             $stmt = $this->db->getPdo()->prepare("SELECT * FROM productos ORDER BY id DESC");
@@ -103,16 +105,17 @@ class Producto {
             $productos = $stmt->fetchAll();
             return $productos;
         } catch (PDOException $e) {
-            error_log("Error al obtener los productos: " . $e->getMessage());
+            error_log("Error al obtener productos: " . $e->getMessage());
             return false;
         }
     }
 
+    // Guardar un producto
     public function guardar(){
         if(preg_match('/^[a-zA-ZáéíóúÁÉÍÓÚ\s]{3,}$/', $this->nombre) &&
-       preg_match('/^[a-zA-ZáéíóúÁÉÍÓÚ\s]{3,}$/', $this->descripcion) &&
-       preg_match('/^\d+(\.\d{1,2})?$/', $this->precio) && // Permite valores decimales
-       preg_match('/^[0-9]+$/', $this->stock)){
+           preg_match('/^[a-zA-ZáéíóúÁÉÍÓÚ\s]{3,}$/', $this->descripcion) &&
+           preg_match('/^\d+(\.\d{1,2})?$/', $this->precio) && // Permite valores decimales
+           preg_match('/^[0-9]+$/', $this->stock)){
             try {
                 $stmt = $this->db->getPdo()->prepare("INSERT INTO productos (categoria_id, nombre, descripcion, precio, stock, oferta, fecha, imagen) VALUES (:categoria_id, :nombre, :descripcion, :precio, :stock, null, CURDATE(), :imagen)");
                 $stmt->bindParam(':categoria_id', $this->categoria_id);
@@ -123,7 +126,7 @@ class Producto {
                 $stmt->bindParam(':imagen', $this->imagen);
                 return $stmt->execute();
             } catch (PDOException $e) {
-                error_log("Error al guardar el producto: " . $e->getMessage());
+                error_log("Error al guardar producto: " . $e->getMessage());
                 return false;
             }
         } else {
@@ -132,6 +135,7 @@ class Producto {
         }
     }
 
+    // Obtener productos aleatorios
     public function getProductosAleatorios($numProductos){
         try {
             $stmt = $this->db->getPdo()->prepare("SELECT * FROM productos ORDER BY RAND() LIMIT :numProductos");
@@ -140,11 +144,12 @@ class Producto {
             $productos = $stmt->fetchAll(PDO::FETCH_OBJ);
             return $productos;
         } catch (PDOException $e) {
-            error_log("Error al obtener los productos aleatorios: " . $e->getMessage());
+            error_log("Error al obtener productos aleatorios: " . $e->getMessage());
             return false;
         }
     }
 
+    // Obtener productos por categoría
     public function getProductosCategoria(){
         try {
             $sql = "SELECT p.*, c.nombre AS 'catnombre' FROM productos p "
@@ -158,7 +163,7 @@ class Producto {
             return $productos;
 
         } catch (PDOException $e) {
-            error_log("Error al obtener los productos de la categoría: " . $e->getMessage());
+            error_log("Error al obtener productos por categoría: " . $e->getMessage());
             return false;
         }
     }

@@ -3,7 +3,6 @@
 namespace Models;
 
 use Lib\Conexion;
-use PDO;
 use PDOException;
 use Utils\Utils;
 

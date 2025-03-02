@@ -13,7 +13,7 @@
         <?php unset($_SESSION['errorCategoria']); ?>
         <?php endif; ?>
 
-        <form action="<?= URL_BASE ?>categoria/guardar" method="POST" class="mt-10 px-8">
+        <form action="<?= URL_BASE ?>categoria/guardarCategoria" method="POST" class="mt-10 px-8">
             <div class="flex flex-col mb-4">
                 <label for="nombre" class="mb-2 text-sm text-gray-600">Nombre de la categoría</label>
                 <input type="text" name="nombre" id="nombre" required = "" class="border p-2 rounded">

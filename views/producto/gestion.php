@@ -3,7 +3,7 @@
 </div>
 
 <div class="flex justify-center mt-5">
-    <a href="<?= URL_BASE ?>producto/crear" class="bg-blue-500 text-white py-2 px-4 rounded mb-4 inline-block">
+    <a href="<?= URL_BASE ?>producto/crearProducto" class="bg-blue-500 text-white py-2 px-4 rounded mb-4 inline-block">
         <button class="px-4 py-2 ml-6 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300">
             <span class="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-transparent group-hover:dark:bg-transparent">Crear Nuevo Producto</span>
         </button>
