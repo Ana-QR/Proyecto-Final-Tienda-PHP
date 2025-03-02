@@ -17,13 +17,17 @@ function mostrarError(){
 }
 
 if(isset($_GET['controller'])){
-    $nombre_controlador = 'Controllers\\' . ucfirst($_GET['controller']) . 'Controller';
+    $nombre_controlador = 'controllers\\' . ucfirst($_GET['controller']) . 'Controller';
 }elseif(!isset($_GET['controller']) && !isset($_GET['action'])){
     // Configurado en el .htaccess 
-    $nombre_controlador = 'Controllers\\' . ucfirst(controlador_base) . 'Controller';
+    $nombre_controlador = 'controllers\\' . ucfirst(controlador_base) . 'Controller';
+} else {
+    echo "Controlador no encontrado";
+    mostrarError();
+    exit();
 }
 
-if(isset($nombre_controlador) && class_exists($nombre_controlador)){
+if(class_exists($nombre_controlador)){
     // Creo un nuevo objeto de la clase controladora
     $controlador = new $nombre_controlador();
     // Invocando los métodos automáticamente
