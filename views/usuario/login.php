@@ -44,14 +44,14 @@ require_once __DIR__ . '/../../config/config.php';
 
                 <!--Campo de solicitud de recordar contraseña-->
                 <div class="flex items-center">
-                    <input id="remember" type="checkbox" value="" class="w-4 h-4 border border-gray-600 bg-gray-700 focus:ring-yellow-500">
-                    <label for="remember" class="ml-2 text-sm text-yellow-400">Recuérdame</label>
+                    <input id="recuerdame" type="checkbox" value="" class="w-4 h-4 border border-gray-600 bg-gray-700 focus:ring-yellow-500">
+                    <label for="recuerdame" class="ml-2 text-sm text-yellow-400">Recuérdame</label>
                 </div>
 
                 <!--Botón de envío de formulario-->
                 <button type="submit" class="w-full bg-yellow-400 text-black font-bold py-2 px-4 rounded-md hover:bg-yellow-500 transition">Enviar</button>
                 <p class="text-sm text-center">
-                    ¿No tienes una cuenta? <a href="<?= URL_BASE; ?>usuario/mostrarFormularioRegistro" class="text-yellow-400 hover:underline">Regístrate aquí</a>.
+                    ¿No tienes una cuenta? <a href="<?= URL_BASE; ?>usuario/registro" class="text-yellow-400 hover:underline">Regístrate aquí</a>.
                 </p>
             </form>
         </div>
