@@ -1,16 +1,15 @@
 <?php
+ob_start(); // Iniciar el buffer de salida
 
-// Iniciar la sesión
-session_start();
+session_start();// Iniciar la sesión
 
 // Llamo a los controladores a través del autoload
 require_once 'autoload.php'; // Archivo autoload
-require_once 'config/config.php'; // Conexión a la base de datos
 require_once 'config/param.php'; // Archivo de parámetros
-require_once 'helpers/utils.php';
-require_once 'views/layout/header.php'; // Layout header vista
 
 use Controllers\ErrorController;
+
+require_once __DIR__.'/views/layout/header.php'; // Layout header
 
 
 function mostrarError(){
@@ -19,17 +18,17 @@ function mostrarError(){
 }
 
 if(isset($_GET['controller'])){
-    $nombre_controlador = $_GET['controller'].'Controller';
+    $nombre_controlador = 'Controllers\\' . ucfirst($_GET['controller']) . 'Controller';
 }elseif(!isset($_GET['controller']) && !isset($_GET['action'])){
     // Configurado en el .htaccess 
-    $nombre_controlador = 'controllers\\' . controlador_base . 'Controller';
-}else{
+    $nombre_controlador = 'Controllers\\' . controlador_base . 'Controller';
     // Si no existe el controlador, llama la función de errores
+    echo "La página que buscas no se ha encontrado";
     mostrarError();
     exit();
 }
 
-if(isset($nombre_controlador) && class_exists($nombre_controlador, true)){
+if(isset($nombre_controlador)){
     // Creo un nuevo objeto de la clase controladora
     $controlador = new $nombre_controlador();
     // Invocando los métodos automáticamente
@@ -40,11 +39,14 @@ if(isset($nombre_controlador) && class_exists($nombre_controlador, true)){
         $action_default = accion_por_defecto;
         $controlador->$action_default();
     }else{
+        echo "La accion por defecto no se ha encontrado";
         mostrarError();
     }
 }else{
+    echo "El controlador no se ha encontrado";
     mostrarError();
 }
 
-require_once 'views/layout/footer.php'; // Layout footer
+require_once __DIR__.'/views/layout/footer.php'; // Layout footer
+ob_end_flush(); // Liberar el buffer de salida
 ?>

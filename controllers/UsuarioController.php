@@ -22,6 +22,11 @@ class UsuarioController
         require_once __DIR__ . '/../views/usuario/registro.php';
     }
 
+    public function login()
+    {
+        require_once __DIR__ . '/../views/usuario/login.php';
+    }
+
     public function gestion()
     {
         Utils::esAdmin();
@@ -224,27 +229,6 @@ class UsuarioController
         }
 
         header("Location:" . URL_BASE . "usuario/gestion");
-    }
-
-    public function login()
-    {
-        if (isset($_POST)) {
-            $usuario = new Usuario();
-            $usuario->setEmail($_POST['email']);
-            $usuario->setPassword($_POST['password']);
-
-            $identity = $usuario->login();
-
-            if ($identity && is_object($identity)) {
-                $_SESSION['identity'] = $identity;
-                if ($identity->rol == 'admin') {
-                    $_SESSION['admin'] = true;
-                }
-            } else {
-                $_SESSION['error_login'] = 'Identificación fallida !!';
-            }
-        }
-        header("Location:" . URL_BASE);
     }
 
     public function actualizarAdmin()

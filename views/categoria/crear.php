@@ -1,16 +1,25 @@
-<?php if (isset($_SESSION['categoria']) && $_SESSION['categoria'] == 'correcto') : ?>
-    <strong class="text-green-500">Categoría creada correctamente</strong>
+<!-- filepath: /c:/xampp/htdocs/dashboard/ProyectoFinal/views/categoria/crear.php -->
+<section class="bg-white mt-10">
+  <div class="py-12 px-4 mx-auto max-w-4xl lg:py-20 lg:px-8">
+      <h2 class="mb-6 text-2xl font-bold text-gray-900">Añade una nueva categoría</h2>
+      <!-- Manejo de errores al escribir la categoria -->
+        <?php if (isset($_SESSION['errorCategoria']) && $_SESSION['errorCategoria'] == 'true') : ?>
+            <div class="flex justify-center mt-4">
+                <div>
+                    <strong class="text-red-500">Error al crear la categoría</strong>
+                    <span class="block text-sm text-gray-500">El nombre de la categoría no es válido</span>
+                </div>
+            </div>
+        <?php unset($_SESSION['errorCategoria']); ?>
+        <?php endif; ?>
 
-<?php elseif (isset($_SESSION['categoria']) && $_SESSION['categoria'] == 'incorrecto') : ?>
-    <strong class="text-red-500">Error al crear la categoría</strong>
-<?php endif; ?>
-<?php Utils::borrarSesion('categoria'); ?>
-
-<h2 class="text-lg font-semibold">Crear nueva categoría</h2>
-<form action="<?= URL_BASE ?>categoria/guardar" method="POST">
-    <label for="nombre" class="block">Nombre de la categoría</label>
-    <input type="text" name="nombre" required class="border p-2 rounded">
-    <button type="submit" class="bg-blue-500 text-white p-2 rounded">Guardar</button>
-</form>
-
-?>
+        <form action="<?= URL_BASE ?>categoria/guardar" method="POST" class="mt-10 px-8">
+            <div class="flex flex-col mb-4">
+                <label for="nombre" class="mb-2 text-sm text-gray-600">Nombre de la categoría</label>
+                <input type="text" name="nombre" id="nombre" required = "" class="border p-2 rounded">
+            </div>
+            <button type="submit" class="bg-blue-500 text-white p-2 rounded">Crear Categoria</button>
+        </form>
+    </div>
+</section>
+            
