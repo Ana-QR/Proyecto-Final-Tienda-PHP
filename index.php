@@ -1,7 +1,7 @@
 <?php
 ob_start(); // Iniciar el buffer de salida
 
-session_start();// Iniciar la sesión
+session_start(); // Iniciar la sesión
 
 // Llamo a los controladores a través del autoload
 require_once 'autoload.php'; // Archivo autoload
@@ -18,7 +18,7 @@ function mostrarError(){
 
 if(isset($_GET['controller'])){
     $nombre_controlador = 'controllers\\' . ucfirst($_GET['controller']) . 'Controller';
-}elseif(!isset($_GET['controller']) && !isset($_GET['action'])){
+} elseif(!isset($_GET['controller']) && !isset($_GET['action'])) {
     // Configurado en el .htaccess 
     $nombre_controlador = 'controllers\\' . ucfirst(controlador_base) . 'Controller';
 } else {
@@ -34,14 +34,14 @@ if(class_exists($nombre_controlador)){
     if(isset($_GET['action']) && method_exists($controlador, $_GET['action'])){
         $action = $_GET['action'];
         $controlador->$action();
-    }elseif(!isset($_GET['controller']) && !isset($_GET['action'])){
+    } elseif(!isset($_GET['controller']) && !isset($_GET['action'])) {
         $action_default = accion_por_defecto;
         $controlador->$action_default();
-    }else{
+    } else {
         echo "La acción no se ha encontrado";
         mostrarError();
     }
-}else{
+} else {
     echo "El controlador no se ha encontrado";
     mostrarError();
 }

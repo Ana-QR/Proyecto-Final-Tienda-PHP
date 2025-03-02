@@ -18,8 +18,6 @@ if ($pdo) {
     echo "Error en la conexión";
 }
 
-$conexion->close();
-
 class UsuarioController
 {
     private $pdo;

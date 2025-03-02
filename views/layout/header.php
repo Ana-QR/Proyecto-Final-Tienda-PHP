@@ -64,11 +64,13 @@ if (!isset($_SESSION['log']) && isset($_COOKIE['recuerdame'])) {
                             Inicio
                         </a>
                     </li>
-                    <!-------------------  CATEGORÍAS DINÁMICAS -------------------->
+
+
+
                     <?php if (!empty($categorias) && is_array($categorias)): ?>
                         <?php foreach ($categorias as $categoria): ?>
                             <li>
-                                <a href="<?= URL_BASE ?>categoria/verCategoria?id=<?= urlencode($categoria['id']) ?>" class="block px-3 py-2 text-white rounded-sm md:p-0 hover:bg-gray-600 md:hover:bg-transparent md:hover:text-yellow-400">
+                                <a href="<?= URL_BASE ?>categoria/ver?id=<?= urlencode($categoria['id']) ?>" class="block px-3 py-2 text-white rounded-sm md:p-0 hover:bg-gray-600 md:hover:bg-transparent md:hover:text-yellow-400">
                                     <?= htmlspecialchars($categoria["nombre"], ENT_QUOTES, 'UTF-8') ?>
                                 </a>
                             </li>

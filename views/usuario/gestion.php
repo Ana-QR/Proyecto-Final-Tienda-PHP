@@ -40,7 +40,7 @@
                         <?= ucwords($usuario["rol"]) ?>
                     </td>
                     <td class="px-6 py-4">
-                    <a href="<?=URL_BASE?>usuario/edtar&id=<?=$usuario['id']?>">
+                    <a href="<?=URL_BASE?>usuario/editar&id=<?=$usuario['id']?>">
                         <button type="button" class="text-white bg-gradient-to-r from-cyan-400 via-cyan-500 to-cyan-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-cyan-300 shadow-lg shadow-cyan-500/50 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">Editar</button>
                     </a>
                 </tr>

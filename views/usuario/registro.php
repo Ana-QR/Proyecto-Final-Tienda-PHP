@@ -19,9 +19,13 @@ require_once __DIR__ . '/../../config/config.php';
         <h1 class="text-3xl font-bold text-center mb-5 text-yellow-400 font-serif">Registro</h1>
         
         <?php if (isset($_SESSION['registro']) && $_SESSION['registro'] == 'correcto'): ?>
-            <strong class="block text-green-400 text-center">Registro completado correctamente</strong>
+            <div class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-100" role="alert">
+                <span class="font-medium">Registro completado correctamente</span>
+            </div>        
         <?php elseif (isset($_SESSION['registro']) && $_SESSION['registro'] == 'incorrecto'): ?>
-            <strong class="block text-red-400 text-center">Registro fallido</strong>
+            <div class="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-100" role="alert">
+                <span class="font-medium">El registro no se ha podido completar</span>
+            </div>
         <?php endif; ?>
         
         <form action="<?= URL_BASE; ?>usuario/registrarUsuario" method="POST" class="space-y-4">

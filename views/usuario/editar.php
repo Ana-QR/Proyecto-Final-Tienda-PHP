@@ -6,7 +6,7 @@
     <div class="py-12 px-4 mx-auto max-w-4xl lg:py-20 lg:px-8">
 
 
-        <form action="<?= URL_BASE ?>usuario/actualizar" method="POST" class="form-usuario space-y-4">
+        <form action="<?= URL_BASE ?>usuario/editarUsuario" method="POST" class="form-usuario space-y-4">
             <div class="bg-white shadow-md rounded-lg overflow-hidden">
 
                 <div class="p-4">
@@ -38,7 +38,7 @@
                 </select>
             </div>
             <button type="submit" class="bg-blue-500 text-white p-2 rounded">
-                Actualizar Usuario
+                Editar Usuario
             </button>
         </form>
     </div>

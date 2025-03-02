@@ -12,13 +12,13 @@ class CategoriaController{
         $categoria = new Categoria(); 
         return $categoria->getCategorias();
 
-        require_once __DIR__ . 'views/categoria/index.php';
+        require_once 'views/categoria/index.php';
     }
 
     public function crearCategoria(){
         Utils::esAdmin(); // Solo los administradores pueden crear categorias
 
-        require_once __DIR__ . 'views/categoria/crear.php';
+        require_once 'views/categoria/crear.php';
     }
 
     public function guardarCategoria(){
@@ -53,7 +53,7 @@ class CategoriaController{
             $producto->setCategoriaId($id);
             $productos = $producto->getProductosCategoria($id);
         }
-        require_once __DIR__ . 'views/categoria/ver.php';
+        require_once 'views/categoria/ver.php';
     }
 }
 ?>
