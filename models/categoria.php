@@ -5,6 +5,7 @@ namespace Models;
 use Lib\Conexion;
 use PDO;
 use PDOException;
+use Utils\Utils;
 
 class Categoria{
     private $id;
@@ -29,22 +30,28 @@ class Categoria{
     }
 
     public function setNombre($nombre){
-        $this->nombre = $this->db->getPDO()->quote($nombre);
+        $this->nombre = ucwords(strtolower($nombre));
     }
 
     // Listar todas las categorias
-    public function getAllCategorias(){
-        $sql = "SELECT * FROM categorias ORDER BY id DESC";
-        $categorias = $this->db->getPDO()->query($sql);
-        return $categorias;
+    public function getCategorias(){
+        try {
+            $stmt = $this->db->getPdo()->prepare("SELECT * FROM categorias");
+            $stmt->execute();
+            $categorias = $stmt->fetchAll();
+            return $categorias;
+        } catch (PDOException $e) {
+            error_log("Error al obtener las categorías: " . $e->getMessage());
+            return false;
+        }
     }
 
     public function getCategoria(){
         try{
             $stmt = $this->db->getPDO()->prepare("SELECT * FROM categorias WHERE id = :id");
-            $stmt->bindParam(':id', $this->id, PDO::PARAM_INT);
+            $stmt->bindParam(':id', $this->id);
             $stmt->execute();
-            $categoria = $stmt->fetch(PDO::FETCH_ASSOC);
+            $categoria = $stmt->fetch();
             return $categoria;
         }catch(PDOException $e){
             echo "Error al obtener dicha categoria: " . $e->getMessage();

@@ -6,7 +6,7 @@ use Lib\Conexion;
 use PDO;
 use PDOException;
 use Exception;
-use Utils;
+use Helpers\Utils;
 
 class Usuario
 {

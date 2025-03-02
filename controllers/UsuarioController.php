@@ -5,7 +5,7 @@ namespace Controllers;
 require_once 'models/Usuario.php';
 
 use Models\Usuario;
-use Utils;
+use Helpers\Utils;
 
 class UsuarioController
 {

@@ -6,6 +6,9 @@
     $categoriaController = new CategoriaController();
     $categorias = $categoriaController->porDefecto();
 
+    if(!isset($_SESSION['usuario']) && isset($_COOKIE['remember'])){
+        $_SESSION['usuario'] = ['nombre' => $_COOKIE['remember']];
+    }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -15,34 +18,42 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Header</title>
+    <style>
+        nav {
+            width: 100%;
+            z-index: 1000; 
+        }
+        main {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+    </style>
 </head>
 
-<body style="background-color:#6b7280; font-family: Arial, sans-serif; color: #1a1a1a;">
+<body style="display: flex; flex-direction: column; min-height: 100vh; background-color: #D6EEFF;">
     <header id="header">
-        <nav class="bg-white border-gray-300">
+        <nav class="bg-white border-gray-300 w-full">
             <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-                <a href="ProyectoFinal/" class="flex items-center space-x-3 rtl:space-x-reverse">
-                <img src="<?=URL_BASE?>assets/img/logo.jpg" alt="Logo" class="h-16 md:h-12 w-auto">
+                <a href="<?=URL_BASE?>" class="flex items-center space-x-3 rtl:space-x-reverse">
+                    <img src="<?=URL_BASE?>assets/img/logo.jpg" alt="Logo" class="h-16 md:h-12 w-auto">
                     <span class="self-left text-2xl font-semibold whitespace-nowrap text-black">Tienda Vinilos</span>
                 </a>
 
                 <div class="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
-                    <div class="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
-                        <?php if (isset($_SESSION['usuario'])): ?>
-                            <span class="text-gray-900 dark:text-white"><?php echo $_SESSION['usuario']['nombre']; ?> <?php echo $_SESSION['usuario']['apellido']; ?></span>
-                            <a href="http://localhost/dashboard/ProyectoFinal/views/usuario/logout.php" class="text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2 text-center ml-2">
-                                Cerrar sesión
-                            </a>
-                        <?php else: ?>
-                            <a href="http://localhost/dashboard/ProyectoFinal/views/usuario/login.php" class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center ml-2">
-                                Iniciar sesión
-                            </a>
-                        <?php endif; ?>
-                    </div>
-
-                    <a href="http://localhost/dashboard/ProyectoFinal/views/usuario/registro.php" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 ml-2">
-                        Registrarse
-                    </a>
+                    <?php if (isset($_SESSION['usuario'])): ?>
+                        <span class="text-gray-900 dark:text-white"><?php echo $_SESSION['usuario']['nombre']; ?> <?php echo $_SESSION['usuario']['apellido']; ?></span>
+                        <a href="<?=URL_BASE?>views/usuario/logout.php" class="text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2 text-center ml-2">
+                            Cerrar sesión
+                        </a>
+                    <?php else: ?>
+                        <a href="<?=URL_BASE?>views/usuario/login.php" class="text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center ml-2">
+                            Iniciar sesión
+                        </a>
+                        <a href="<?=URL_BASE?>views/usuario/registro.php" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 ml-2">
+                            Registrarse
+                        </a>
+                    <?php endif; ?>
                     <button data-collapse-toggle="navbar-cta" type="button"
                         class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
                         aria-controls="navbar-cta" aria-expanded="false">
@@ -55,11 +66,9 @@
                 </div>
             </div>
 
-
             <div class="items-center justify-center hidden w-full md:flex md:w-auto md:order-1" id="navbar-cta">
                 <ul class="flex flex-col items-center font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-100 
                     md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-gray-100 md:dark:bg-white dark:border-gray-300">
-
                     <li><a href="/inicio" class="block py-2 px-3 md:p-0 text-black bg-red-600 rounded-sm md:bg-transparent 
                               md:text-red-600" aria-current="page">Inicio</a></li>
                     <li><a href="/categorias" class="block py-2 px-3 md:p-0 text-gray-700 rounded-sm hover:bg-gray-200 md:hover:bg-transparent 
@@ -99,6 +108,9 @@
             </div>
         </nav>
     </header>
+
+    <main class="flex-1">
+    </main>
 
     <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js" defer></script>
 </body>

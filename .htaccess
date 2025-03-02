@@ -1,11 +1,13 @@
-RewriteEngine On
-
-#Asegurar que el modulo mod_rewrite esta activado
 <IfModule mod_rewrite.c>
-    #Redirigir todas las solicitudes a index.php, excepto archivos y directorios existentes
-    
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]
+    # Activar RewriteEngine
+    RewriteEngine On
+    ErrorDocument 404 http://localhost/dashboard/ProyectoFinal/error/
+
+    # Elimina de la URL todo menos directorios y archivos
+    RewriteCond %{SCRIPT_FILENAME} !-d
+    RewriteCond %{SCRIPT_FILENAME} !-f
+
+    # Reglas de reescritura (Cambia el formato de la URL)
+    RewriteRule ^(.*)/(.*) index.php?controller=$1&action=$2
 
 </IfModule>

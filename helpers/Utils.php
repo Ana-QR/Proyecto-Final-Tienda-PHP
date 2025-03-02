@@ -1,4 +1,6 @@
 <?php
+Namespace Helpers;
+use Models\Categoria;
 
 class Utils{
 
@@ -19,6 +21,12 @@ class Utils{
         }else{
             return true;
         }
+    }
+
+    public static function mostrarCategorias(){
+        $categoria = new Categoria();
+        $categorias = $categoria->getAllCategorias();
+        return $categorias;
     }
 }
 

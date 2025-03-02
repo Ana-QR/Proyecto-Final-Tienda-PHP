@@ -5,7 +5,10 @@
         Crear Producto
     </a>
 
-    <?php Utils::borrarSesion('producto'); ?>
+    <?php 
+    use Helpers\Utils;
+    Utils::borrarSesion('producto'); 
+    ?>
 
     <div class="overflow-x-auto">
         <table class="min-w-full bg-white border border-gray-200">
