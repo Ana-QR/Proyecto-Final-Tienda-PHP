@@ -21,8 +21,8 @@
             <tbody>
                 <?php foreach ($categorias as $cat) { ?>
                     <tr class="hover:bg-gray-100">
-                        <td class="py-2 px-4 border-b"><?= $cat["id"] ?></td>
-                        <td class="py-2 px-4 border-b"><?= $cat["nombre"] ?></td>
+                    <td class="py-2 px-4 border-b"><?= htmlspecialchars($cat["id"], ENT_QUOTES, 'UTF-8') ?></td>
+                    <td class="py-2 px-4 border-b"><?= htmlspecialchars($cat["nombre"], ENT_QUOTES, 'UTF-8') ?></td>
                     </tr>
                 <?php } ?>
             </tbody>

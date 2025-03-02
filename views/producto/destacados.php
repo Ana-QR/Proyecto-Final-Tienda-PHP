@@ -4,24 +4,27 @@
 
 <div class="product bg-gray-800 shadow-lg rounded-lg overflow-hidden border border-gray-700">
 
-    <?php if ($productos): ?>
-        <?php foreach ($productos as $product): ?>
-            <div class="product bg-gray-800 shadow-lg rounded-lg overflow-hidden border border-gray-700">
-                <a href="#">
-                    <img class="w-full h-48 object-cover" src="<?= URL_BASE ?>assets/img/<?= $product->imagen ?>" alt="product image" />
-                </a>
-                <div class="p-4">
+    <?php if (isset($productos) && !empty($productos)): ?>
+        <div class="productos">
+            <?php foreach ($productos as $producto): ?>
+                <div class="producto bg-gray-800 shadow-lg rounded-lg overflow-hidden border border-gray-700">
                     <a href="#">
-                        <h2 class="text-lg font-semibold text-yellow-400"><?= $product->nombre ?></h2>
+                        <img class="w-full h-48 object-cover" src="<?= URL_BASE ?>assets/img/<?= htmlspecialchars($producto->getImagen(), ENT_QUOTES, 'UTF-8') ?>" alt="<?= htmlspecialchars($producto->getNombre(), ENT_QUOTES, 'UTF-8') ?>" />
                     </a>
-                    <div class="flex items-center justify-between mt-2">
-                        <span class="text-yellow-400"><?= $product->precio ?> €</span>
-                        <a href="#" class="inline-block bg-yellow-400 text-black px-4 py-2 rounded hover:bg-yellow-500 transition">Comprar</a>
+                    <div class="p-4">
+                        <a href="#">
+                            <h2 class="text-lg font-semibold text-yellow-400"><?= htmlspecialchars($producto->getNombre(), ENT_QUOTES, 'UTF-8') ?></h2>
+                        </a>
+                        <p><?= htmlspecialchars($producto->getDescripcion(), ENT_QUOTES, 'UTF-8') ?></p>
+                        <div class="flex items-center justify-between mt-2">
+                            <span class="text-yellow-400"><?= htmlspecialchars($producto->getPrecio(), ENT_QUOTES, 'UTF-8') ?> €</span>
+                            <a href="#" class="inline-block bg-yellow-400 text-black px-4 py-2 rounded hover:bg-yellow-500 transition">Comprar</a>
+                        </div>
                     </div>
                 </div>
-            </div>
-        <?php endforeach; ?>
+            <?php endforeach; ?>
+        </div>
     <?php else: ?>
-        <p class="text-yellow-400">No hay productos para mostrar</p>
+        <p class="text-yellow-400">No hay productos destacados en este momento.</p>
     <?php endif; ?>
 </div>

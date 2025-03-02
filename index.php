@@ -17,10 +17,10 @@ function mostrarError(){
 }
 
 if(isset($_GET['controller'])){
-    $nombre_controlador = 'controllers\\' . ucfirst($_GET['controller']) . 'Controller';
+    $nombre_controlador = 'Controllers\\' . ucfirst($_GET['controller']) . 'Controller';
 } elseif(!isset($_GET['controller']) && !isset($_GET['action'])) {
     // Configurado en el .htaccess 
-    $nombre_controlador = 'controllers\\' . ucfirst(controlador_base) . 'Controller';
+    $nombre_controlador = 'Controllers\\' . ucfirst(controlador_base) . 'Controller';
 } else {
     echo "Controlador no encontrado";
     mostrarError();
