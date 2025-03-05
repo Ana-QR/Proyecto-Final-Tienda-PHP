@@ -1,8 +1,10 @@
 <?php
 
 Namespace Models;
-use Lib\conexion;
 
+require_once __DIR__.'../Lib/conexion.php';
+
+use Lib\conexion;
 use PDO;
 use PDOException;
 
@@ -98,15 +100,20 @@ class Producto {
     }
 
     // Obtener todos los productos
-    public function getProductos() {
+    public function getProductos()
+    {
         try {
-            $stmt = $this->db->getPdo()->prepare("SELECT * FROM productos ORDER BY id DESC");
-            $stmt->execute();
-            $productos = $stmt->fetchAll();
+            $sql = "SELECT p.*, c.nombre AS categoria FROM productos p JOIN categorias c ON p.categoria_id = c.id";
+            $stmt = $this->db->getPdo()->query($sql);
+            $productos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            if (empty($productos)) {
+                return [];
+            }
+
             return $productos;
-        } catch (PDOException $e) {
-            error_log("Error al obtener productos: " . $e->getMessage());
-            return false;
+        } catch (PDOException $error) {
+            return [];
         }
     }
 
@@ -135,17 +142,32 @@ class Producto {
         }
     }
 
-    // Obtener productos aleatorios
-    public function getProductosAleatorios($numProductos){
+    // Obtener productos aleatorios por id
+    public function getProductosAleatorios($id){
         try {
-            $stmt = $this->db->getPdo()->prepare("SELECT * FROM productos ORDER BY RAND() LIMIT :numProductos");
-            $stmt->bindParam(':numProductos', $numProductos, PDO::PARAM_INT);
+            $query = "SELECT * FROM productos WHERE id = :id LIMIT 1";
+            
+            $stmt = $this->db->getPdo()->prepare($query);
+            
+            // Vinculamos el parámetro :id a la variable $id
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            
+            // Ejecutamos la consulta
             $stmt->execute();
-            $productos = $stmt->fetchAll(PDO::FETCH_OBJ);
-            return $productos;
+            
+            // Recuperamos el resultado
+            $producto = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            // Verificamos si se encontró el producto
+            if ($producto) {
+                return $producto;
+            } else {
+                error_log("No se encontró el producto");
+                return null;
+            }
         } catch (PDOException $e) {
-            error_log("Error al obtener productos aleatorios: " . $e->getMessage());
-            return false;
+            // Manejo de errores
+            die("Error al obtener el producto: " . $e->getMessage());
         }
     }
 
@@ -165,6 +187,34 @@ class Producto {
         } catch (PDOException $e) {
             error_log("Error al obtener productos por categoría: " . $e->getMessage());
             return false;
+        }
+    }
+
+    public function editar(){
+        try{
+            $stmt = $this->db->getPdo()->prepare("UPDATE productos SET nombre = :nombre, descripcion = :descripcion, precio = :precio, stock = :stock, categoria_id = :categoria_id, imagen = :imagen WHERE id = :id");
+            $stmt->bindParam(':id', $this->id);
+            $stmt->bindParam(':nombre', $this->nombre);
+            $stmt->bindParam(':descripcion', $this->descripcion);
+            $stmt->bindParam(':precio', $this->precio);
+            $stmt->bindParam(':stock', $this->stock);
+            $stmt->bindParam(':categoria_id', $this->categoria_id);
+            $stmt->bindParam(':imagen', $this->imagen);
+
+            return $stmt->execute();
+        }catch(PDOException $e){
+            die("Error en la base de datos: " . $e->getMessage());
+        }
+    }
+
+    public function eliminar($id){
+        try {
+            $stmt = $this->db->getPdo()->prepare("DELETE FROM productos WHERE id = :id");
+            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            return $stmt->execute(); 
+        } catch (PDOException $e) {
+            error_log("Error al obtener productos por categoría: " . $e->getMessage());
+            return false; 
         }
     }
 }

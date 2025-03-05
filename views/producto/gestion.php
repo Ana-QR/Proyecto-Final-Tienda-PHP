@@ -1,40 +1,77 @@
-<div id="gestion-productos" class="p-6">
-    <h1 class="text-2xl font-bold mb-4">Gestion Productos</h1>
-</div>
+<?php
+require_once '../../controllers/ProductoController.php';
+require_once '../../controllers/PedidoController.php';
 
-<div class="flex justify-center mt-5">
-    <a href="<?= URL_BASE ?>producto/crearProducto" class="bg-blue-500 text-white py-2 px-4 rounded mb-4 inline-block">
-        <button class="px-4 py-2 ml-6 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300">
-            <span class="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-transparent group-hover:dark:bg-transparent">Crear Nuevo Producto</span>
-        </button>
-    </a>
-</div>
+use Controllers\ProductoController;
+use Controllers\PedidoController;
 
-    <div class="overflow-x-auto">
-        <table class="min-w-full bg-white border border-gray-200">
-            <thead class="bg-gray-200">
-                <tr>
-                    <th class="px-4 py-2 border-b">ID</th>
-                    <th class="px-4 py-2 border-b">NOMBRE</th>
-                    <th class="px-4 py-2 border-b">PRECIO</th>
-                    <th class="px-4 py-2 border-b">STOCK</th>
-                    <th class="px-4 py-2 border-b">ACCIONES</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($productos as $product) { ?>
-                    <tr class="hover:bg-gray-100">
-                        <td class="px-4 py-2 border-b"><?= $product["id"] ?></td>
-                        <td class="px-4 py-2 border-b"><?= $product["nombre"] ?></td>
-                        <td class="px-4 py-2 border-b"><?= $product["precio"] ?> €</td>
-                        <td class="px-4 py-2 border-b"><?= $product["stock"] ?></td>
-                        <td class="px-4 py-2 border-b">
-                            <a href="<?= URL_BASE ?>producto/editar&id=<?= $product["id"] ?>" class="text-blue-500 hover:underline mr-2">Editar</a>
-                            <a href="<?= URL_BASE ?>producto/eliminar&id=<?= $product["id"] ?>" class="text-red-500 hover:underline" onclick="return confirm('¿Estás seguro de eliminar este producto?')">Eliminar</a>
-                        </td>
-                    </tr>
-                <?php } ?>
-            </tbody>
-        </table>
-    </div>
-</div>
+$producto = new PedidoController();
+$productos = $producto->gestion();
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <header class="header-form bg-gray-800 text-white p-4 flex justify-between items-center">
+        <h1 class="text-2xl">Gestión de Productos</h1>
+        <nav>
+            <ul class="flex space-x-4">
+                <li><a href="crear.php" class="hover:underline"><i class="fas fa-plus"></i> Añadir</a></li>
+                <li><a href="../usuario/gestion.php" class="hover:underline">Volver atrás</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main class="p-6">
+        <div class="admin-container">
+            <h1 class="text-2xl font-bold mb-4">Productos disponibles</h1>
+            <div class="overflow-x-auto">
+                <table class="min-w-full bg-white border border-gray-200">
+                    <thead class="bg-gray-200">
+                        <tr>
+                            <th class="px-4 py-2 border-b">ID</th>
+                            <th class="px-4 py-2 border-b">Nombre</th>
+                            <th class="px-4 py-2 border-b">Descripción</th>
+                            <th class="px-4 py-2 border-b">Precio</th>
+                            <th class="px-4 py-2 border-b">Stock</th>
+                            <th class="px-4 py-2 border-b">Categoría</th>
+                            <th class="px-4 py-2 border-b">Imagen</th>
+                            <th class="px-4 py-2 border-b">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php if(!empty($productos) && is_array($productos)):?>
+                            <?php foreach($productos as $producto): ?>
+                                <tr class="hover:bg-gray-100">
+                                    <td class="px-4 py-2 border-b"><?= $producto['id'] ?></td>
+                                    <td class="px-4 py-2 border-b"><?= $producto['nombre'] ?></td>
+                                    <td class="px-4 py-2 border-b"><?= $producto['descripcion'] ?></td>
+                                    <td class="px-4 py-2 border-b"><?= $producto['precio'] ?> €</td>
+                                    <td class="px-4 py-2 border-b"><?= $producto['stock'] ?></td>
+                                    <td class="px-4 py-2 border-b"><?= $producto['categoria'] ?></td>
+                                    <td class="px-4 py-2 border-b">
+                                        <img src="../../../src/<?= $producto['imagen'] ?>" width="80" height="90" alt="Imagen">
+                                    </td>
+                                    <td class="px-4 py-2 border-b">
+                                        <a href="editarProducto.php?id=<?= $producto['id']; ?>" class="text-blue-500 hover:underline mr-2">Editar</a>
+                                        <a href="eliminarProducto.php?id=<?= $producto['id']; ?>" class="text-red-500 hover:underline" onclick="return confirm('¿Estás seguro de eliminar este producto?')">Eliminar</a>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <tr>
+                                <td colspan="8" class="px-4 py-2 border-b text-center">No se encontraron productos disponibles.</td>
+                            </tr>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+<script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js" defer></script>
+</body>
+</html>

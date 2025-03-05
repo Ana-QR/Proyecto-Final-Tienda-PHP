@@ -1,26 +1,26 @@
 <?php
-require_once __DIR__ . '/../../models/Producto.php';
+require_once __DIR__.'/../models/Producto.php';
 session_start();
 
 use \Models\Producto;
 
 $producto = new Producto();
 
-// Obtener algunos productos aleatorios para la sección destacada
-$productos = $producto->getProductosAleatorios(6); // Obtener 6 productos aleatorios
-
+// Verificar si se pasó un ID de categoría por la URL
+$categoria_id = isset($_GET['categoria']) ? intval($_GET['categoria']) : 0;
+$productos = $categoria_id ? $producto->getProductosCategoria($categoria_id) : [];
 ?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Productos Destacados</title>
+    <title>Productos por Categoria</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 <body class="bg-gray-100">
     <header class="bg-blue-600 text-white p-4">
-        <h1 class="text-2xl font-bold">Productos Destacados</h1>
+        <h1 class="text-2xl font-bold">Productos de la Categoria</h1>
         <nav>
             <ul class="flex space-x-4">
                 <li><a href="../../index.php" class="hover:underline">Volver atrás</a></li>
@@ -42,7 +42,7 @@ $productos = $producto->getProductosAleatorios(6); // Obtener 6 productos aleato
                     <?php endforeach; ?>
                 </div>
             <?php else: ?>
-                <p class="text-center text-gray-700">No hay productos destacados en este momento.</p>
+                <p class="text-center text-gray-700">No hay productos en esta categoría.</p>
             <?php endif; ?> 
         </div>
     </main>

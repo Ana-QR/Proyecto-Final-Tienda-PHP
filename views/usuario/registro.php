@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/../../config/param.php';
 require_once __DIR__ . '/../../config/config.php';
+require_once __DIR__ . '/../../models/Usuario.php';
 ?>
 
 <!DOCTYPE html>
@@ -28,7 +29,8 @@ require_once __DIR__ . '/../../config/config.php';
             </div>
         <?php endif; ?>
         
-        <form action="<?= URL_BASE; ?>usuario/registrarUsuario" method="POST" class="space-y-4">
+        <form action="../../controllers/UsuarioController.php" method="POST" class="space-y-4">
+            <input type="hidden" name="action" value="registrarUsuario">
             <div>
                 <label for="nombre" class="block text-yellow-400">Nombre</label>
                 <input type="text" id="nombre" name="nombre" class="w-full p-2 bg-gray-700 border border-gray-600 rounded-md text-white" required />
@@ -46,7 +48,8 @@ require_once __DIR__ . '/../../config/config.php';
                 <input type="password" id="password" name="password" class="w-full p-2 bg-gray-700 border border-gray-600 rounded-md text-white" required />
             </div>
             <div class="flex items-center">
-                <input id="recuerdame" name="recuerdame" type="checkbox" value="1" class="w-4 h-4 border border-gray-600 bg-gray-700 focus:ring-yellow-500">
+                <input id="recuerdame" name="recuerdame" type="checkbox" value="1" class="w-4 h-4 border border-gray-600 bg-gray-700 focus:ring-yellow-500"
+                <?php echo isset($_COOKIE['email']) ? 'checked' : ''?>>
                 <label for="recuerdame" class="ml-2 text-sm text-yellow-400">Recuérdame</label>
             </div>
             <button type="submit" class="w-full bg-yellow-400 text-black font-bold py-2 px-4 rounded-md hover:bg-yellow-500 transition">Registrarse</button>
@@ -56,6 +59,7 @@ require_once __DIR__ . '/../../config/config.php';
         </form>
     </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js" defer></script>
 </body>
 
 </html>

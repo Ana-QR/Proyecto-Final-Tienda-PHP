@@ -19,17 +19,17 @@ require_once __DIR__ . '/../../config/config.php';
             <h1 class="text-3xl font-bold text-center mb-5 text-yellow-400 font-serif">Iniciar sesión</h1>
 
             <!-- Mostrar mensajes de sesion -->
-            <?php if (isset($_SESSION['login']) && $_SESSION['login'] == 'correcto'): ?>
+            <?php if (isset($_SESSION['log']) && $_SESSION['log'] == 'correcto'): ?>
                 <strong class="block text-green-400 text-center">Inicio de sesión completado correctamente</strong>
             <?php endif; ?>
 
             <!-- Mostrar mensajes de error -->
-            <?php if (isset($_SESSION['error'])) : ?>
-                <p class="text-red-400 text-center"><?php echo $_SESSION['error']; unset($_SESSION['error']); ?></p>
+            <?php if (isset($_SESSION['error_login'])) : ?>
+                <p class="text-red-400 text-center"><?php echo $_SESSION['error_login']; unset($_SESSION['error_login']); ?></p>
             <?php endif; ?>
 
             <!-- Formulario de inicio de sesión -->
-            <form action="<?= URL_BASE ?>usuario/loginUsuario" method="POST" class="space-y-4">
+            <form action="<?= URL_BASE; ?>controllers/UsuarioController.php" method="POST" class="space-y-4">
                 <!--Campo de solicitud de correo electrónico-->
                 <div>
                     <label for="email" class="block text-yellow-400">Correo electrónico</label>
@@ -44,7 +44,8 @@ require_once __DIR__ . '/../../config/config.php';
 
                 <!--Campo de solicitud de recordar contraseña-->
                 <div class="flex items-center">
-                    <input id="recuerdame" type="checkbox" value="" class="w-4 h-4 border border-gray-600 bg-gray-700 focus:ring-yellow-500">
+                    <input id="recuerdame" type="checkbox" value="" class="w-4 h-4 border border-gray-600 bg-gray-700 focus:ring-yellow-500" 
+                    <?php echo isset($_COOKIE['email']) ? 'checked' : ''?>>
                     <label for="recuerdame" class="ml-2 text-sm text-yellow-400">Recuérdame</label>
                 </div>
 

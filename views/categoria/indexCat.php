@@ -1,13 +1,18 @@
+
 <!-- filepath: /c:/xampp/htdocs/dashboard/ProyectoFinal/views/categoria/indexCat.php -->
+<header class="bg-white shadow">
+    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+        <h1 class="text-3xl font-bold text-gray-900">Categorías</h1>
+    </div>
+</header>
+
 <div class="w-full max-w-4xl bg-white p-6 rounded-lg shadow-md">
     <h1 class="text-2xl font-semibold text-center mb-5">Gestionar Categorías</h1>
 </div>
 
 <div class="flex justify-center mt-5">
     <a href="<?= URL_BASE; ?>categoria/crearCategoria" class="inline-block mb-5 text-white bg-blue-600 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-500 dark:hover:bg-blue-600 dark:focus:ring-blue-800">
-        <button class="px-4 py-2 ml-6 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300">
-            <span class="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-transparent group-hover:dark:bg-transparent">Crear Categoría</span>
-        </button>
+        Crear Categoría
     </a>
 </div>
 
@@ -20,18 +25,12 @@
             </tr>
         </thead>
         <tbody>
-            <?php if (isset($categorias) && !empty($categorias)): ?>
-                <?php foreach ($categorias as $cat): ?>
-                    <tr class="hover:bg-gray-100">
-                        <td class="py-2 px-4 border-b"><?= htmlspecialchars($cat["id"], ENT_QUOTES, 'UTF-8') ?></td>
-                        <td class="py-2 px-4 border-b"><?= htmlspecialchars($cat["nombre"], ENT_QUOTES, 'UTF-8') ?></td>
-                    </tr>
-                <?php endforeach; ?>
-            <?php else: ?>
-                <tr>
-                    <td colspan="2" class="py-2 px-4 border-b text-center">No hay categorías disponibles</td>
+        <?php while($cat = $categorias->fetch_object()): ?>
+                <tr>    
+                    <td><?=$cat->id;?></td>
+                    <td><?=$cat->nombre;?></td>
                 </tr>
-            <?php endif; ?>
+                <?php endwhile; ?>
         </tbody>
     </table>
 </div>

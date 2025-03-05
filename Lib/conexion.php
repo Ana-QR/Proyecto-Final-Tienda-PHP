@@ -17,10 +17,12 @@ class Conexion{
         }
     }
 
+    //conectar a la base de datos
     public function getPdo(){
         return $this->pdo;
     }
 
+    //cerrar la conexión
     public function close(){
         $this->pdo = null; // Cerrar la conexión
     }

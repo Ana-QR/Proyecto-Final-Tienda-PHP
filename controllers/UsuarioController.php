@@ -2,7 +2,7 @@
 
 namespace Controllers;
 
-require_once 'models/Usuario.php';
+require_once 'models/usuario.php';
 require_once 'Lib/conexion.php';
 
 use Lib\Conexion;
@@ -52,6 +52,7 @@ class UsuarioController
     }
 
     public function registrarUsuario(){
+        //Validacion de datos
         if(($_SERVER['REQUEST_METHOD'] == 'POST')){
 
             $nombre = isset($_POST['nombre']) ? trim($_POST['nombre']) : false;
@@ -111,7 +112,7 @@ class UsuarioController
                 }
 
                 // Verificar si el checkbox "Recuérdame" está marcado
-                if(isset($_POST['recordar'])){
+                if(isset($_POST['recuerdame'])){
                     // Crear una cookie que expire en 7 días
                     setcookie('recuerdame', $log->getNombre(), time() + (7 * 24 * 60 * 60), "/");
                 }

@@ -59,17 +59,21 @@ class Categoria{
         }
     }
 
-    // Guardar una categoria
-    public function guardar(){
-        $conexion = new Conexion();
-        $pdo = $conexion->getPdo();
+    // Guardar(crear) una categoria
+    public function guardar($nombre){
+    try{
+        $this->db = new Conexion();
+        $stmt = $this->db->getPdo()->prepare("INSERT INTO categorias (nombre) VALUES (:nombre)");
+        $stmt->bindParam(':nombre', $nombre, PDO::PARAM_STR);
 
-        $stmt = $pdo->prepare("INSERT INTO categorias (nombre) VALUES (:nombre)");
-        $stmt->bindParam(':nombre', $this->nombre);
+        $resultado = $stmt->execute();
 
-        $stmt->execute();
-
-        $conexion->close();
+        $this->db->close();
+    
+        return $resultado;
+    }catch(PDOException $error){
+        die("Error al insertar una categoría: " . $error->getMessage());
+    }
     }
 }
 ?>
